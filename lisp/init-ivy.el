@@ -3,10 +3,6 @@
 
 (use-package ivy
   :ensure t
-;;  :bind (
-;;	 ("M-x" . counsel-M-x)
-;;	 ("C-c C-r" . ivy-resume)
-;;	 ("\C-s" . swiper))
   :config
   (ivy-mode 1)
   (setq ivy-use-virtual-buffers t)
@@ -14,11 +10,17 @@
 
 (use-package counsel
   :ensure t
-  :bind (("M-x" . counsel-M-x)))
+  :bind (("M-x" . counsel-M-x)
+	 ("C-s" . swiper)
+	 ("C-x C-r" . counsel-recentf)
+	 ("C-x C-f" . counsel-find-file)))
 
-;;(use-package swipper
-;;  :ensure t
-;;  :bind (("\C-s" . swiper)))
+;;;;;;
+;;
+;; Get Ivy to play nice with persp-mode
+;;
+;;;;;;
+
 
 
 

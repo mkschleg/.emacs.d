@@ -1,71 +1,46 @@
 
-
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 (setq load-prefer-newer t)
 
-(setq force-load-messages t)
-(setq debug-on-error t)
-
-(global-subword-mode 1)
-
-(setq make-backup-files nil)
-
+;; Potentially makes things snappier by doing garbage collection out of frame.
 (add-hook 'focus-out-hook #'garbage-collect)
 
+;;;;;;;;;
+;; Initialize config
+;;;;;;;;;
 
-(defun reload-config ()
-  "Reload the config for emacs."
-  (interactive "r")
-  (load-file ~/.emacs))
-
-(require 'init-package)
-(require 'init-ivy)
-(require 'init-dashboard)
-(require 'init-persp)
-(require 'init-keybinds)
-
-
-
-;;;;;;;;;;;;
-;;
-;; Misc Settings to be moved in the future.
-;;
-;;;;;;;;;;;;
-
-(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-
-(load-theme 'monokai t)
-
-(defalias 'yes-or-no-p 'y-or-n-p)
-(setq column-number-mode t)
-(require 'autopair)
-
-(windmove-default-keybindings 'meta)
-
-(tool-bar-mode -1)
+(setq ring-bell-function 'ignore)
+(setq make-backup-files nil)
 
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
 
-;; (use-package smart-mode-line
-;;   :ensure t
-;;   :config
-;;   (setq powerline-arrow-shape 'curve)
-;;   (setq powerline-default-separator-dir '(right . left))
-;;   ;; These two lines you really need.
-;;   (setq sml/theme 'powerline)
-;;   (sml/setup))
+(defun reload-config ()
+  "Reload the config for emacs."
+  (interactive)
+  (load-file "~/.emacs"))
 
-(use-package spaceline
-  :ensure t
-  :config
-  (spaceline-spacemacs-theme))
+;;;;;;
+;; Core 
+;;;;;;
 
-(toggle-scroll-bar -1)
+(require 'init-package)
+(require 'init-funcs)
+(require 'init-keybinds)
+(require 'init-visuals)
+(require 'init-hydra)
+(require 'init-persp)
+(require 'init-ivy)
+(require 'init-editor)
 
 
 
-;; (use-package powerline
-;;   :ensure t
-;;   :config
-;;   (powerline-default-theme))
+;;;;;;;;
+;; Mode configs
+;;;;;;;;
+(require 'init-org)
+(require 'init-tex)
+(require 'init-julia)
+
+
+

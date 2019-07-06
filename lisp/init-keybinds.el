@@ -1,6 +1,5 @@
 
 
-
 (use-package god-mode
   :ensure t
   :bind (("<escape>" . god-local-mode)))
@@ -8,7 +7,10 @@
 (use-package which-key
   :ensure t
   :config
-  (which-key-mode))
+  (setq which-key-idle-delay 0.25)
+  (which-key-mode)
+  (which-key-enable-god-mode-support)
+  (diminish 'which-key-mode))
 
 
 (use-package general
@@ -38,6 +40,16 @@
   "cd" 'comment-dwim
   "cr" 'comment-or-uncomment-region)
 
+;;;;;
+;; ORG Mode
+;;;;;
+
+
+
+
+;;;;;
+;; helm
+;;;;;
 
 
 
