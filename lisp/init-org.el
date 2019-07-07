@@ -15,7 +15,8 @@
   (org-default-notes-file (concat org-directory "/refile.org"))
   (org-highlight-latex-and-related '(latex script entities))
   (org-agenda-files (list "~/org/"
-			  "~/Documents/Research/notes/projects/"))
+			  "~/Documents/Research/notes/projects/"
+			  "~/Documents/Research/notes/topics/"))
   (org-agenda-tag-filter-preset (quote
                                  ("-ignore")))
   (org-treat-S-cursor-todo-selection-as-state-change nil)
@@ -24,10 +25,12 @@
   ;; Don't calculate the statistics of a todo item recursively through the tree
   (org-hierarchical-todo-statistics nil)
   ;; Org to latex pdf process
-  (org-latex-pdf-process (list "latexmk -pdf -bibtex %f"))
+  (org-latex-pdf-process (list "latexmk -pdf -bibtex %f -output-directory=%o"))
   ;; Larger equations
   (org-latex-prefer-user-labels t)
   (org-latex-logfiles-extensions (quote ("lof" "lot" "tex~" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl")))
+  
+  (mattroot/org-pub-dir "/Users/Matt/org/org-export-files")
   :config
   
   (defun org-renumber-environment (orig-func &rest args)
@@ -73,9 +76,46 @@
   ;; (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.3))
   ;; (plist-put org-format-latex-options :scale 1.3)
   (advice-add 'org-create-formula-image :around #'org-renumber-environment)
+  
   ;; (advice-add 'org-create-formula-image :around #'org-renumber-environment :scale ())
 
+  (defun mattroot/org-export-output-file-name-modified (orig-fun extension &optional subtreep pub-dir)
+    (unless mattroot/org-pub-dir
+      (setq mattroot/org-pub-dir "exported-org-files")
+      (unless (file-directory-p mattroot/org-pub-dir)
+	(make-directory mattroot/org-pub-dir)))
+    (apply orig-fun extension subtreep mattroot/org-pub-dir nil))
+  (advice-add 'org-export-output-file-name :around #'mattroot/org-export-output-file-name-modified)
+
+
+  (setcdr (assoc "\\.pdf\\'" org-file-apps) 'pdf-tools)
+
+
+  (require 'init-org-macros)
+
+  (setq org-export-global-macros mattroot/org-macros)
+
+  
   )
+
+
+
+;; (use-package org-publish
+;;   :config
+;;   (setq org-publish-project-alist
+;;   '(("html"
+;;      :base-directory "~/org/"
+;;      :base-extension "org"
+;;      :publishing-directory "~/org/exports"
+;;      :publishing-function org-html-publish-to-html)
+;;     ("pdf"
+;;      :base-directory "~/org/"
+;;      :base-extension "org"
+;;      :publishing-directory "~/org/exports"
+;;      :publishing-function org-latex-publish-to-pdf)
+;;     ("all" :components ("html" "pdf"))))
+
+;;   )
 
 
 ;;;;
@@ -94,10 +134,37 @@
 (use-package zotxt
   :ensure t
   :hook (org-mode . (lambda () (org-zotxt-mode 1)))
+  :bind (("C-c \" o" . mattroot/org-zotxt-get-org-file-at-point))
+  :functions
+  mattroot/org-zotxt-org-file
+  mattroot/org-zotxt-get-org-file-at-point
   :config
   ;; Change citation format to be less cumbersome in files.
   ;; You'll need to install matt-short into your style manager first.
-  (setq zotxt-default-bibliography-style "matt-short"))
+  (setq zotxt-default-bibliography-style "matt-short")
+
+  (defun mattroot/org-zotxt-org-file (item)
+    ;; (message item)
+    (s-replace-all '((" " . "_") (".pdf" . ".org"))
+  		   (nth 0 (last (split-string item "/")))))
+
+  (defun mattroot/org-zotxt-get-org-file-at-point (&optional arg)
+    "Opens with `org-open-file', see for more information about ARG."
+    (interactive "P")
+    (lexical-let ((item-id (org-zotxt-extract-link-id-at-point))
+                  (arg arg))
+      (deferred:$
+	(request-deferred
+	 (format "%s/items" zotxt-url-base)
+	 :params `(("key" . ,item-id) ("format" . "paths"))
+	 :parser 'json-read)
+	(deferred:nextc it
+          (lambda (response)
+            (let ((paths (cdr (assq 'paths (elt (request-response-data response) 0)))))
+              (kill-new (mattroot/org-zotxt-org-file (org-zotxt-choose-path paths))))))
+	(if zotxt--debug-sync (deferred:sync! it)))))
+
+  )
 
 
 (use-package org-ref
@@ -150,6 +217,7 @@
               ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
               ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
               ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
+
 
 
 

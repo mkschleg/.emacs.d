@@ -4,8 +4,12 @@
 
 (setq-default indicate-empty-lines t)
 (global-subword-mode 1)
+(diminish 'subword-mode)
+
 (global-visual-line-mode)
 (diminish 'visual-line-mode)
+
+(diminish 'auto-rev-mode)
 
 (use-package unfill
   :ensure
@@ -20,17 +24,19 @@
 
 (use-package autopair
   :ensure t
+  :diminish autopair-mode
   :config
   (autopair-global-mode)
-  (diminish 'autopair-mode)
   )
 
 (use-package rainbow-delimiters
+  :diminish rainbow-delimiters-mode
   :ensure t
   :hook (prog-mode . (lambda () (rainbow-delimiters-mode))))
 
 (use-package flyspell
   :ensure t
+  :diminish flyspell-mode
   :hook (text-mode . (lambda () (flyspell-mode 1))))
 
 (use-package company
@@ -64,7 +70,7 @@
   :config
   (global-undo-tree-mode 1))
 
-(diminish 'eldoc-mode)
+;; (diminish 'eldoc-mode)
 
 
 (remove-hook 'LaTeX-mode-hook 'latex/auto-fill-mode)

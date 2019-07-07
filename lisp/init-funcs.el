@@ -11,7 +11,8 @@
 ;;      ", ")
 ;;   )
 
-
+(use-package s
+  :ensure t)
 
 (defun mattroot/number-names (list)
   "Enumerate and concatenate LIST."
