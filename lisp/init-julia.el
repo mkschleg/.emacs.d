@@ -13,4 +13,9 @@
   :bind (("M-m j r" . jupyter-run-repl)
 	 ("M-m j c" . jupyter-connect-repl)))
 
+;; (use-package lsp-julia
+;;   :quelpa (lsp-julia :fetcher github :repo "non-Jedi/lsp-julia")
+;;   :config
+;;   (add-hook 'julia-mode-hook #'lsp-deffered))
+
 (provide 'init-julia)

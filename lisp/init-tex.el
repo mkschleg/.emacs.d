@@ -28,7 +28,6 @@
   (add-hook 'LaTex-mode-hook 'turn-off-auto-fill)
   )
 
-
 (use-package reftex
   :ensure t
   :diminish reftex-mode

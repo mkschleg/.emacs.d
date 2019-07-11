@@ -70,6 +70,20 @@
   :config
   (global-undo-tree-mode 1))
 
+(use-package yasnippet
+  :ensure t)
+
+(use-package yasnippet-snippets
+  :ensure t)
+
+;; (use-package lsp-mode
+;;   :ensure t
+;;   :commands (lsp lsp-deffered))
+
+;; (use-package lsp-ui :ensure t :commands lsp-ui-mode)
+;; (use-package company-lsp :ensure t :commands company-lsp)
+;; (use-package helm-lsp :ensure t :commands helm-lsp-workspace-symbol)
+
 ;; (diminish 'eldoc-mode)
 
 

@@ -24,7 +24,7 @@
  '(magit-diff-use-overlays nil)
  '(package-selected-packages
    (quote
-    (jupyter julia-mode org-ref eyebrowse dimmer magit pdf-tools auctex-latexmk company-auctex latex-extra fullframe diminish auto-compile multiple-cursors spaceline smart-mode-line-powerline-theme powerline autopair yasnippet which-key use-package undo-tree projectile nameless monokai-theme mmm-mode lsp-julia hydra helm-swoop god-mode general font-lock+ evil-unimpaired diff-hl dashboard counsel company-statistics company-math auctex aggressive-indent ace-window)))
+    (yasnippet-snippets helm-lsp company-lsp lsp-ui jupyter julia-mode org-ref eyebrowse dimmer magit pdf-tools auctex-latexmk company-auctex latex-extra fullframe diminish auto-compile multiple-cursors spaceline smart-mode-line-powerline-theme powerline autopair yasnippet which-key use-package undo-tree projectile nameless monokai-theme mmm-mode lsp-julia hydra helm-swoop god-mode general font-lock+ evil-unimpaired diff-hl dashboard counsel company-statistics company-math auctex aggressive-indent ace-window)))
  '(pos-tip-background-color "#FFFACE")
  '(pos-tip-foreground-color "#272822")
  '(vc-annotate-background nil)

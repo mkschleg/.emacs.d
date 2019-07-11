@@ -104,6 +104,7 @@
   mattroot/eyebrowse--get-tags
   mattroot/eyebrowse--get-slots
   mattroot/eyebrowse--get-current-tag
+  mattroot/eyebrowse--get-current-slot-idx
   :custom
   (eyebrowse-wrap-around t)
   :config
@@ -129,15 +130,16 @@
     (--map (int-to-string (car it))
            (eyebrowse--get 'window-configs)))
 
+  (defun mattroot/eyebrowse--get-current-slot-idx ()
+    (cl-position (number-to-string (eyebrowse--get 'current-slot)) (mattroot/eyebrowse--get-slots) :test 'equal))
+
   (defun mattroot/eyebrowse--get-current-tag ()
-    (let* ((current-config (nth (eyebrowse--get 'current-slot) (eyebrowse--get 'window-configs)))
+    (let* ((current-config (nth (mattroot/eyebrowse--get-current-slot-idx) (eyebrowse--get 'window-configs)))
 	   (split-tag (split-string (eyebrowse-format-slot current-config) ":")))
       (if (eq (length split-tag) 2)
   	  (nth 1 split-tag)
   	(car split-tag))))
 
-  ;; (nth (eyebrowse--get 'current-slot) (eyebrowse--get 'window-configs))
-  
   (mattroot/hydra-prepare-dynamic-names (mapconcat 'identity (mattroot/eyebrowse--get-slots) "")
 					(mattroot/eyebrowse--get-tags)
 					(mattroot/eyebrowse--get-current-tag))
@@ -182,39 +184,7 @@ _l_ -> last         _r_ -> rename     _q_ quit")
 			    ("7" #'eyebrowse-switch-to-window-config-7 :color blue)
 			    ("8" #'eyebrowse-switch-to-window-config-8 :color blue)
 			    ("9" #'eyebrowse-switch-to-window-config-9 :color blue))
-			 ))))))
-
-
-  
-  ;; Get names
-  ;; split string (split-string "a:b" ":")
-  ;; (nth 2 (assoc (eyebrowse--get 'current-slot) (eyebrowse--get 'window-configs)))
-  ;; cdr and car are the basic list opperations.
-  ;; (--map (int-to-string (car it))
-  ;;        (eyebrowse--get 'window-configs))
-
-  ;; (with-eval-after-load "hydra"
-  ;;   (bind-keys ("M-m ." .
-  ;;               (lambda ()
-  ;;                 (interactive)
-  ;;                 (call-interactively
-  ;;                  (eval `(defhydra mattroot/hydra-persp (:hint nil :exit t)
-  ;; 			      ;; Docstring
-  ;;                           (concat "Select Window: "
-  ;; 				      "\n"
-  ;; 				      (mattroot/hydra-prepare-dynamic-names mattroot/hydra-dynamic-selectors
-  ;; 									    persp-names-cache
-  ;; 									    (safe-persp-name (get-frame-persp)))
-  ;; 				      "\n")
-  ;; 			      ;; Heads
-  ;;                           ,@(mattroot/hydra-prepare-dynamic-heads mattroot/hydra-dynamic-selectors
-  ;; 								      persp-names-cache
-  ;; 								      'persp-frame-switch)
-  ;; 			      ("n" nil "next" :color blue)
-  ;; 			      )))))))
-
-
-  )
+			 )))))))
 
 ;;;;;
 ;; Bridge for eyebrowse and persp-mode

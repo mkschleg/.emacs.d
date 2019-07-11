@@ -8,8 +8,7 @@
 (use-package org
   :functions
   org-renumber-environment
-  :init
-  (global-unset-key (kbd "C-c ["))
+  :bind (("C-c a" . org-agenda))
   :custom
   (org-directory "~/org/")
   (org-default-notes-file (concat org-directory "/refile.org"))
@@ -29,56 +28,54 @@
   ;; Larger equations
   (org-latex-prefer-user-labels t)
   (org-latex-logfiles-extensions (quote ("lof" "lot" "tex~" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl")))
-  
   (mattroot/org-pub-dir "/Users/Matt/org/org-export-files")
+  (org-latex-packages-alist '(("" "natbib" nil)))
   :config
+
+  ;; Adding some renumbering functionality for equations in org files
   
   (defun org-renumber-environment (orig-func &rest args)
-  (let ((results '()) 
-        (counter -1)
-        (numberp))
+    (let ((results '()) 
+          (counter -1)
+          (numberp))
 
-    (setq results (loop for (begin .  env) in 
-                        (org-element-map (org-element-parse-buffer) 'latex-environment
-                          (lambda (env)
-                            (cons
-                             (org-element-property :begin env)
-                             (org-element-property :value env))))
-                        collect
-                        (cond
-                         ((and (string-match "\\\\begin{equation}" env)
-                               (not (string-match "\\\\tag{" env)))
-                          (incf counter)
-                          (cons begin counter))
-                         ((string-match "\\\\begin{align}" env)
-                          (prog2
-                              (incf counter)
-                              (cons begin counter)                          
-                            (with-temp-buffer
-                              (insert env)
-                              (goto-char (point-min))
-                              ;; \\ is used for a new line. Each one leads to a number
-                              (incf counter (count-matches "\\\\$"))
-                              ;; unless there are nonumbers.
-                              (goto-char (point-min))
-                              (decf counter (count-matches "\\nonumber")))))
-                         (t
-                          (cons begin nil)))))
+      (setq results (loop for (begin .  env) in 
+                          (org-element-map (org-element-parse-buffer) 'latex-environment
+                            (lambda (env)
+                              (cons
+                               (org-element-property :begin env)
+                               (org-element-property :value env))))
+                          collect
+                          (cond
+                           ((and (string-match "\\\\begin{equation}" env)
+				 (not (string-match "\\\\tag{" env)))
+                            (incf counter)
+                            (cons begin counter))
+                           ((string-match "\\\\begin{align}" env)
+                            (prog2
+				(incf counter)
+				(cons begin counter)                          
+                              (with-temp-buffer
+				(insert env)
+				(goto-char (point-min))
+				;; \\ is used for a new line. Each one leads to a number
+				(incf counter (count-matches "\\\\$"))
+				;; unless there are nonumbers.
+				(goto-char (point-min))
+				(decf counter (count-matches "\\nonumber")))))
+                           (t
+                            (cons begin nil)))))
 
-    (when (setq numberp (cdr (assoc (point) results)))
-      (setf (car args)
-            (concat
-             (format "\\setcounter{equation}{%s}\n" numberp)
-             (car args)))))
+      (when (setq numberp (cdr (assoc (point) results)))
+	(setf (car args)
+              (concat
+               (format "\\setcounter{equation}{%s}\n" numberp)
+               (car args)))))
   
-  (apply orig-func args))
+    (apply orig-func args))
 
-  ;; (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.3))
-  ;; (plist-put org-format-latex-options :scale 1.3)
   (advice-add 'org-create-formula-image :around #'org-renumber-environment)
   
-  ;; (advice-add 'org-create-formula-image :around #'org-renumber-environment :scale ())
-
   (defun mattroot/org-export-output-file-name-modified (orig-fun extension &optional subtreep pub-dir)
     (unless mattroot/org-pub-dir
       (setq mattroot/org-pub-dir "exported-org-files")
@@ -87,15 +84,14 @@
     (apply orig-fun extension subtreep mattroot/org-pub-dir nil))
   (advice-add 'org-export-output-file-name :around #'mattroot/org-export-output-file-name-modified)
 
-
   (setcdr (assoc "\\.pdf\\'" org-file-apps) 'pdf-tools)
-
 
   (require 'init-org-macros)
 
   (setq org-export-global-macros mattroot/org-macros)
 
-  
+  (global-unset-key (kbd "C-c ["))
+
   )
 
 
@@ -220,22 +216,6 @@
 
 
 
-
-
-;; (defun org-mode-reftex-setup ()
-;;   (load-library "reftex")
-;;   (and (buffer-file-name)
-;;        (file-exists-p (buffer-file-name))
-;;        (reftex-parse-all))
-;;   (define-key org-mode-map (kbd "C-c )") 'reftex-citation))
-
-;; (add-hook 'org-mode-hook 'org-mode-reftex-setup)
-
-
-;; (setq org-latex-to-pdf-process '("latex %f && bibtex %f && latex %f && latex %f"))
-;; Add notes refile file for fast captures
-
-
 ;;;;
 ;; Ob
 ;;;;
@@ -253,8 +233,8 @@
 ;; (add-hook 'org-mode-hook 'org-display-inline-images)
 
 
-(root-leader
-  "a" 'org-agenda)
+;; (root-leader
+;;   "a" 'org-agenda)
 
 
 

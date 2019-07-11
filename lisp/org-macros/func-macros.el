@@ -1,9 +1,6 @@
 
 
 
-
-
-
 (defvar mattroot/org-macros-funcs
   (list
    '("if-defined-ref-else-link" . "(eval
