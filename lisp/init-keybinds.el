@@ -1,8 +1,8 @@
 
 
-(use-package god-mode
-  :ensure t
-  :bind (("<escape>" . god-local-mode)))
+;; (use-package god-mode
+;;   :ensure t
+;;   :bind (("<escape>" . god-local-mode)))
 
 (use-package which-key
   :ensure t

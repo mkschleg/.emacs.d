@@ -28,7 +28,6 @@
    :fetcher git
    :url "https://framagit.org/steckerhalter/quelpa-use-package.git"))
 
-
 (eval-when-compile (require 'use-package))
 (eval-when-compile (require 'quelpa-use-package))
 
