@@ -8,6 +8,7 @@
   mattroot/org-skip-subtree-if-priority
   mattroot/org-export-output-file-name-modified
   :bind (("C-c a" . org-agenda))
+  :hook ((org-mode . (lambda () (visual-line-mode 1))))
   :custom
   (org-directory "~/org/")
   (org-default-notes-file (concat org-directory "/refile.org"))
@@ -20,68 +21,43 @@
   (org-agenda-tag-filter-preset (quote
                                  ("-ignore")))
   (org-treat-S-cursor-todo-selection-as-state-change nil)
+
   ;; Ability to use key shortcuts for selecting a state
   (org-use-fast-todo-selection t)
+
   ;; Don't calculate the statistics of a todo item recursively through the tree
   (org-hierarchical-todo-statistics nil)
+
   ;; Org to latex pdf process
   (org-latex-pdf-process (list "latexmk -pdf -bibtex %f -output-directory=%o"))
+
   ;; Larger equations
   (org-latex-prefer-user-labels t)
   (org-latex-logfiles-extensions (quote ("lof" "lot" "tex~" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl")))
   (mattroot/org-pub-dir "/Users/Matt/org/org-export-files")
   (org-latex-packages-alist '(("" "natbib" nil)))
+  
   (org-default-priority ?C)
   (org-lowest-priority ?D)
+  
   (org-src-tab-acts-natively nil)
+
+  ;; Org habit
+  (org-habit-scheduled-past-days nil)
+  (calendar-week-start-day 1)
   :config
 
-  ;; (require 'org-install)
   (require 'org-habit-plus)
-  
-  ;; Adding some renumbering functionality for equations in org files
-  
-  (defun org-renumber-environment (orig-func &rest args)
-    (let ((results '()) 
-          (counter -1)
-          (numberp))
 
-      (setq results (loop for (begin .  env) in 
-                          (org-element-map (org-element-parse-buffer) 'latex-environment
-                            (lambda (env)
-                              (cons
-                               (org-element-property :begin env)
-                               (org-element-property :value env))))
-                          collect
-                          (cond
-                           ((and (string-match "\\\\begin{equation}" env)
-				 (not (string-match "\\\\tag{" env)))
-                            (incf counter)
-                            (cons begin counter))
-                           ((string-match "\\\\begin{align}" env)
-                            (prog2
-				(incf counter)
-				(cons begin counter)                          
-                              (with-temp-buffer
-				(insert env)
-				(goto-char (point-min))
-				;; \\ is used for a new line. Each one leads to a number
-				(incf counter (count-matches "\\\\$"))
-				;; unless there are nonumbers.
-				(goto-char (point-min))
-				(decf counter (count-matches "\\nonumber")))))
-                           (t
-                            (cons begin nil)))))
+  ;; Export details
+  (add-to-list 'org-latex-packages-alist '("" "fullpage" nil))
 
-      (when (setq numberp (cdr (assoc (point) results)))
-	(setf (car args)
-              (concat
-               (format "\\setcounter{equation}{%s}\n" numberp)
-               (car args)))))
-  
-    (apply orig-func args))
+  ;; (add-hook 'org-shiftup-final-hook 'windmove-up)
+  (add-hook 'org-shiftleft-final-hook 'windmove-left)
+  ;; (add-hook 'org-shiftdown-final-hook 'windmove-down)
+  (add-hook 'org-shiftright-final-hook 'windmove-right)
+  (setq org-support-shift-select 'always)
 
-  (advice-add 'org-create-formula-image :around #'org-renumber-environment)
   
   (defun mattroot/org-export-output-file-name-modified (orig-fun extension &optional subtreep pub-dir)
     (unless mattroot/org-pub-dir
@@ -102,10 +78,8 @@
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . t)
-     ;; (julia . t)
      (python . t)
-     ;;(jupyter . t)
-     ))
+     (jupyter . t)))
 
   (setq indent-tabs-mode nil)
   (setq org-edit-src-content-indentation 0)
@@ -134,7 +108,11 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
                   ((org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo 'done)
 						  (org-agenda-skip-if nil '(scheduled))))
                    (org-agenda-overriding-header "High-priority unfinished tasks:")))
-	    (tags "experiment"
+	    (tags "REXP"
+		  ((org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo 'done)
+						  (org-agenda-skip-if nil '(scheduled))))
+                   (org-agenda-overriding-header "Running Experiments:")))
+	    (tags "EXP"
                   ((org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo 'done)
 						  (org-agenda-skip-if nil '(scheduled))))
                    (org-agenda-overriding-header "Experiments:")))
@@ -185,7 +163,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 		("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
 		("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
 		("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
-  )
+  ) ;; use-package org
 
 ;;;;
 ;; Pretty bullets
@@ -214,8 +192,8 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 
   (defun mattroot/org-zotxt-org-file (item)
     ;; (message item)
-    (s-replace-all '((" " . "_") (".pdf" . ".org"))
-  		   (nth 0 (last (split-string item "/")))))
+    (downcase (s-replace-all '((" " . "_") (".pdf" . ".org"))
+			     (nth 0 (last (split-string item "/"))))))
 
   (defun mattroot/org-zotxt-get-org-file-at-point (&optional arg)
     "Opens with `org-open-file', see for more information about ARG."

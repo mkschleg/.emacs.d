@@ -14,7 +14,6 @@
 
 (use-package eyebrowse
   :ensure t
-  
   :init
   (setq eyebrowse-keymap-prefix (kbd "M-m l"))
   (global-unset-key (kbd "C-c C-w"))
@@ -22,8 +21,7 @@
   ;; ("M-m l" . eyebrowse-mode-map)
   :config
   (eyebrowse-mode t)
-  (setq eyebrowse-new-workspace t)
-  )
+  (setq eyebrowse-new-workspace t))
 
 
 (provide 'init-eyebrowse)

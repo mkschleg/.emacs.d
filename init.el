@@ -47,4 +47,7 @@
 ;;;;;;;;
 ;; Extras
 ;;;;;;;;
-(require 'init-brain)
+(require 'init-org-notes)
+(require 'init-org-papers)
+(require 'init-org-daily)
+;; (require 'init-brain)

@@ -19,24 +19,23 @@
   (org-babel-jupyter-override-src-block "python")
   (org-babel-jupyter-override-src-block "julia"))
 
-;; (use-package eglot
-;;   :ensure t)
+(use-package eglot
+  :ensure t)
 
-;; (use-package eglot-jl
-;;   :quelpa (eglot-jl :fetcher github :repo "non-Jedi/eglot-jl" :files ("*.el" "*.jl" "*.toml"))
-;;   :config
-;;   (add-hook 'julia-mode-hook 'eglot)
-;;   (setq eglot-connect-timeout 300))
+(use-package eglot-jl
+  :ensure t
+  :config
+  ;; (add-hook 'julia-mode-hook 'eglot)
+  (setq eglot-connect-timeout 300)
+  (setq eglot-jl-default-environment "~/.julia/environments/v1.3"))
 
-;; (use-package lsp-mode)
+(use-package lsp-mode
+  :ensure t)
 
-;; (use-package lsp-julia
-;;   ;; :quelpa (lsp-julia :fetcher github :repo "non-Jedi/lsp-julia")
-;;   :config
-;;   (add-hook 'julia-mode-hook #'lsp-mode))
+(use-package lsp-julia
+  :quelpa (lsp-julia :fetcher github :repo "non-Jedi/lsp-julia"))
 
 ;; (use-package ob-julia
-;;   :ensure t
 ;;   :quelpa
 ;;   (ob-julia :fetcher github :repo "gjkerns/ob-julia.git")
 ;;   :custom
@@ -45,8 +44,7 @@
 ;;   (org-babel-do-load-languages
 ;;    'org-babel-load-languages
 ;;    '((dot . t) (julia . t) (python . t)))
-;;   (setq org-confirm-babel-evaluate nil)
-;;   )
+;;   (setq org-confirm-babel-evaluate nil))
 
 ;; (use-package ess
 ;;   :ensure t
