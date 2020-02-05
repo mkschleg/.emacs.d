@@ -10,7 +10,8 @@
   (setq which-key-idle-delay 0.25)
   (which-key-mode)
   (which-key-enable-god-mode-support)
-  (diminish 'which-key-mode))
+  (diminish 'which-key-mode)
+  )
 
 
 (use-package general

@@ -25,9 +25,10 @@
 ;;;;;;
 
 (require 'init-package)
+(require 'init-visuals)
 (require 'init-funcs)
 (require 'init-keybinds)
-(require 'init-visuals)
+
 (require 'init-hydra)
 (require 'init-persp)
 (require 'init-ivy)
@@ -35,9 +36,9 @@
 
 
 
-;;;;;;;;
-;; Mode configs
-;;;;;;;;
+;; ;;;;;;;;
+;; ;; Mode configs
+;; ;;;;;;;;
 (require 'init-org)
 (require 'init-tex)
 (require 'init-julia)

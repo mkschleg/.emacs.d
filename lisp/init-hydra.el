@@ -45,11 +45,5 @@
 
 
 
-
-
-;; (setq mattroot/hydra-dynamic-selectors
-;;       "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ")
-
-
 (provide 'init-hydra)
 
