@@ -25,8 +25,7 @@
   (add-hook 'TeX-after-compilation-finished-functions
             #'TeX-revert-document-buffer)
 
-  (add-hook 'LaTex-mode-hook 'turn-off-auto-fill)
-  )
+  (add-hook 'LaTeX-mode-hook 'turn-off-auto-fill))
 
 (use-package reftex
   :ensure t

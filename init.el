@@ -42,6 +42,13 @@
 (require 'init-org)
 (require 'init-tex)
 (require 'init-julia)
+(require 'init-python)
 
 
-
+;;;;;;;;
+;; Extras
+;;;;;;;;
+(require 'init-org-notes)
+(require 'init-org-papers)
+(require 'init-org-daily)
+;; (require 'init-brain)

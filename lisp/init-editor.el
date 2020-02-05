@@ -44,6 +44,12 @@
   :config
   (global-company-mode))
 
+(use-package company-quickhelp
+  :ensure t
+  :config
+  (eval-after-load 'company
+    '(define-key company-active-map (kbd "C-c h") #'company-quickhelp-manual-begin)))
+
 (use-package hl-line
   :ensure t
   :hook (prog-mode . hl-line-mode))
@@ -76,18 +82,34 @@
 (use-package yasnippet-snippets
   :ensure t)
 
-;; (use-package lsp-mode
-;;   :ensure t
-;;   :commands (lsp lsp-deffered))
+(use-package lsp-mode
+  :ensure t
+  :commands (lsp lsp-deffered))
 
-;; (use-package lsp-ui :ensure t :commands lsp-ui-mode)
-;; (use-package company-lsp :ensure t :commands company-lsp)
-;; (use-package helm-lsp :ensure t :commands helm-lsp-workspace-symbol)
+(use-package lsp-ui :ensure t :commands lsp-ui-mode)
+(use-package company-lsp :ensure t :commands company-lsp)
+(use-package helm-lsp :ensure t :commands helm-lsp-workspace-symbol)
 
 ;; (diminish 'eldoc-mode)
+
+(use-package hl-todo
+  :ensure t
+  :config
+  (add-hook 'prog-mode-hook 'hl-todo-mode))
 
 
 (remove-hook 'LaTeX-mode-hook 'latex/auto-fill-mode)
   ;; (add-hook 'LaTeX-mode-hook 'visual-line-mode)
+
+(use-package yaml-mode
+  :ensure t)
+
+(root-leader
+  "n" "neotree")
+
+(use-package neotree
+  :ensure t
+  :bind (("M-m n" . neotree))
+  :config (setq neo-smart-open t))
 
 (provide 'init-editor)

@@ -6,7 +6,9 @@
    '("if-defined-ref-else-link" . "(eval
 				   (if (member $1 (org-ref-get-custom-ids))
 				       (concat \"\[\[ref:\" $1 \"\]\]\")
-				     $2))"))
+				     $2))")
+   '("if-standalone" . "\\ifdefined\\mattrootcollection \\else $1 \\fi")
+   '("bibliography" . "\\bibliography{full_bib}"))
   "Functional org macros to be used globally")
 
 (provide 'func-macros)

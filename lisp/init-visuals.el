@@ -16,7 +16,12 @@
 ;; (add-to-list 'default-frame-alist '(horizontal-scroll-bars . nil))
 
 
-(load-theme 'monokai t)
+(use-package monokai-theme
+  :ensure t
+  :config
+  (load-theme 'monokai t))
+
+
 
 ;; (use-package spaceline
 ;;   :ensure t

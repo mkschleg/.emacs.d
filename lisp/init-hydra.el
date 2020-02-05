@@ -17,16 +17,10 @@
     ;; (message highlight-list)
     (mapconcat 'identity
 	       (mapcar* (lambda (a b)
-			  ;; (message "(mattroot/number-names persp-names-cache)")
-			  ;; (let (tmpstr '(concat "_" (char-to-string a) "_ " b)))
-			  ;; (message (eq b highlight-name))
-			  ;; (message "hello World")
-			  ;; (message (eq b highlight-name))
-			  ;; (message b)
 			  (if (string= b highlight-name)
-			      (propertize (concat "[ _" (char-to-string a) "_ " b " ]") 'face highlight-list)
+			      (propertize (concat " [ _" (char-to-string a) "_ " b " ] ") 'face highlight-list)
 			      ;; (concat "* _" (char-to-string a) "_ " b)
-			    (concat "_" (char-to-string a) "_ " b)))
+			    (concat " _" (char-to-string a) "_ " b " ")))
 			keys names)
 	       " | "))
   
