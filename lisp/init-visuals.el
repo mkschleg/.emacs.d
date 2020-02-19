@@ -24,17 +24,17 @@
   (setq powerline-image-apple-rgb t)
   (spaceline-spacemacs-theme))
 
-;; (use-package powerline
-;;   :ensure t
-;;   :config
-;;   (setq powerline-image-apple-rgb t)
-;;   (powerline-default-theme))
-
-
-(use-package dimmer
+(use-package powerline
   :ensure t
   :config
-  (dimmer-mode))
+  (setq powerline-image-apple-rgb t)
+  (powerline-default-theme))
+
+
+;; (use-package dimmer
+;;   :ensure t
+;;   :config
+;;   (dimmer-mode))
 
 ;;;;;
 ;; Change empty line bitmap to tilde (if active)

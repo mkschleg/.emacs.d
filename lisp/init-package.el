@@ -23,10 +23,10 @@
 (unless (package-installed-p 'quelpa) (package-install 'quelpa))
 (unless (package-installed-p 'use-package) (package-install 'use-package))
 
-(quelpa
- '(quelpa-use-package
-   :fetcher git
-   :url "https://framagit.org/steckerhalter/quelpa-use-package.git"))
+;; (quelpa
+;;  '(quelpa-use-package
+;;    :fetcher git
+;;    :url "https://framagit.org/steckerhalter/quelpa-use-package.git"))
 
 
 (eval-when-compile (require 'use-package))

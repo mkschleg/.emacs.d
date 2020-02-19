@@ -97,6 +97,7 @@
 
 
 (use-package eyebrowse :demand t
+  :ensure t
   :init
   ;; (setq eyebrowse-keymap-prefix (kbd "M-m e"))
   (global-unset-key (kbd "C-c C-w"))
