@@ -11,6 +11,8 @@
 
 (diminish 'auto-rev-mode)
 
+(setq indent-tabs-mode nil)
+
 (use-package unfill
   :ensure
   :bind ("M-m u" . unfill-paragraph))
@@ -111,5 +113,12 @@
   :ensure t
   :bind (("M-m n" . neotree))
   :config (setq neo-smart-open t))
+
+;; Javascript tab level
+(setq js-indent-level 2)
+;; (add-hook 'json-mode-hook
+;;           (lambda ()
+;;             (make-local-variable 'js-indent-level)
+;;             (setq js-indent-level 2)))
 
 (provide 'init-editor)

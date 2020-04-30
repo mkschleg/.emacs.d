@@ -45,6 +45,7 @@
   ;; Org habit
   (org-habit-scheduled-past-days nil)
   (calendar-week-start-day 1)
+  (indent-tabs-mode nil)
   :config
 
   (require 'org-habit-plus)
@@ -172,6 +173,8 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 (use-package org-bullets
   :ensure t
   :hook (org-mode . (lambda () (org-bullets-mode 1))))
+
+
 
 
 ;;;;

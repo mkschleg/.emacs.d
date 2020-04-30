@@ -33,8 +33,6 @@
 (require 'init-ivy)
 (require 'init-editor)
 
-
-
 ;;;;;;;;
 ;; Mode configs
 ;;;;;;;;

@@ -24,4 +24,10 @@
      " ")))
 
 
+(use-package request
+  :ensure t)
+
+(use-package request-deferred
+  :ensure t)
+
 (provide 'init-funcs)

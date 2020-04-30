@@ -14,20 +14,14 @@
   :functions
   persp-reorder
   :init
-  ;; (defun mattroot/load-persp ()
-  ;;   (message "Hello Load"))
-  
   (defun persp-reorder ()
     (interactive)
     (refine 'persp-names-cache))
-  
   :custom
-  ;; (persp-keymap-prefix (kbd "M-m l"))
   (persp-nil-name "default")
   (persp-set-last-persp-for-new-frames nil)
   (persp-auto-resume-time 0.1)
-  (ppersp-autokill-buffer-on-remove t)
-  ;; (persp-save-dir "~/.emacs.d/.cache/persp-confs")
+  (persp-autokill-buffer-on-remove t)
   :config
 
   (add-hook 'persp-common-buffer-filter-functions

@@ -29,11 +29,11 @@
   (setq eglot-connect-timeout 300)
   (setq eglot-jl-default-environment "~/.julia/environments/v1.3"))
 
-(use-package lsp-mode
-  :ensure t)
+;; (use-package lsp-mode
+;;   :ensure t)
 
-(use-package lsp-julia
-  :quelpa (lsp-julia :fetcher github :repo "non-Jedi/lsp-julia"))
+;; (use-package lsp-julia
+;;   :quelpa (lsp-julia :fetcher github :repo "non-Jedi/lsp-julia"))
 
 ;; (use-package ob-julia
 ;;   :quelpa

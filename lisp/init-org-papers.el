@@ -2,6 +2,10 @@
 
 (require 'zotxt)
 (require 'org-dir-tree)
+(require 'deferred)
+(require 'request)
+(require 'f)
+
 
 (defgroup org-papers nil
   "Options in relation to org-papers in emacs"
@@ -59,21 +63,18 @@
       (if zotxt--debug-sync (deferred:sync! it)))))
 
 (defun org-papers--insert-paper-heading-from-item (item)
-  ;; (mapcar
-  ;;  (lambda (key)
-  ;;    (insert (symbol-name key)))
-  ;;  (plist-get-keys item)))
   (org-insert-heading-after-current)
   (insert (plist-get item :matt-short))
   (org-set-property org-papers--zotero-id-property (plist-get item :key))
-  (org-papers--set-notes-property
-   (plist-get item :key)
-   (mapconcat 
-    (lambda (itm)
-      (file-name-as-directory
-       (downcase (replace-regexp-in-string " " "_" itm))))
-    (org-get-outline-path)
-    "")))
+  (org-papers-create-paper-note-file))
+  ;; (org-papers--set-notes-property
+  ;;  (plist-get item :key)
+  ;;  (mapconcat 
+  ;;   (lambda (itm)
+  ;;     (file-name-as-directory
+  ;;      (downcase (replace-regexp-in-string " " "_" itm))))
+  ;;   (org-get-outline-path)
+  ;;   "")))
 
 ;; :key:citation:citation-html:matt-short:matt-short-html
 
@@ -120,21 +121,58 @@ selected even if `org-zotxt-default-search-method' is non-nil"
             (org-open-file (org-zotxt-choose-path paths) arg))))
       (if zotxt--debug-sync (deferred:sync! it)))))
 
-(defun org-papers--open-zotero-attachment (&optional arg)
+(defun org-papers-open-zotero-attachment (&optional arg)
   (interactive "P")
   (org-papers--open-zotero-attachment-from-id
    (org-entry-get (point) org-papers--zotero-id-property)
    arg))
 
 (defun org-papers--create-paper-note-file (path title)
+  (if (not (f-dir? (f-dirname path)))
+      (apply 'f-mkdir (f-split (f-dirname path))))
   (if (not (file-exists-p path))
       (with-temp-file path
 	(insert "#+title: " title "\n")
 	(insert "#+setupfile: " (file-relative-name org-papers--paper-note-setupfile (file-name-directory path)) "\n")
 	(insert "\n\n\n"))))
 
-(defun org-papers--open-notes-file (&optional notes-file)
+(defun org-papers--get-org-file-at-point (&optional arg)
+  "Opens with `org-open-file', see for more information about ARG."
+  (interactive "P")
+  (lexical-let ((item-id (org-entry-get nil org-papers--zotero-id-property))
+		(arg arg))
+    (deferred:$
+      (request-deferred
+       (format "%s/items" zotxt-url-base)
+       :params `(("key" . ,item-id) ("format" . "paths"))
+       :parser 'json-read)
+      (deferred:nextc it
+	(lambda (response)
+	  (let ((paths (cdr (assq 'paths (elt (request-response-data response) 0)))))
+	    (kill-new (mattroot/org-zotxt-org-file (org-zotxt-choose-path paths))))))
+      (deferred:sync! it))))
+
+(defun org-papers--get-path-from-list (l)
+  (downcase (s-replace-all '((" " . "_"))
+			   (apply 'f-join l))))
+
+(defun org-papers-create-paper-note-file ()
   (interactive)
+  (let* ((file-name (org-papers--get-org-file-at-point))
+	 (path (org-papers--get-path-from-list (org-get-outline-path)))
+	 (filepath (f-join path file-name)))
+    (progn
+      (org-papers--create-paper-note-file
+       (f-join filepath)
+       (nth 4 (org-heading-components)))
+      (org-set-property org-papers--notes-id-property filepath))))
+
+
+(defun org-papers-insert-paper-heading ()
+  (interactive)
+  (org-papers--insert-paper-heading))
+
+(defun org-papers--open-notes-file (notes-file)
   (unless notes-file (org-entry-get (point) org-papers--notes-id-property))
   (let* ((filename notes-file)
 	 (bfr (find-buffer-visiting filename)))
@@ -144,6 +182,10 @@ selected even if `org-zotxt-default-search-method' is non-nil"
 	(set-window-buffer (selected-window) bfr)
       (find-file-existing filename))))
 
+(defun org-papers-open-notes-file ()
+  (interactive)
+  (org-papers--open-notes-file
+   (org-entry-get nil org-papers--notes-id-property)))
 
 (defun org-papers--take-notes (zotero-id notes-file)
   (org-papers--open-notes-file notes-file)
@@ -153,13 +195,12 @@ selected even if `org-zotxt-default-search-method' is non-nil"
   (interactive)
   (let ((notes-file (org-entry-get nil org-papers--notes-id-property))
 	(zotero-id (org-entry-get nil org-papers--zotero-id-property)))
-    ;; (find-file-existing notes-file)
-    (org-papers--open-notes-file notes-file)
-    (org-papers--open-zotero-attachment-from-id zotero-id)))
+    (org-papers--take-notes zotero-id notes-file)))
 
 (defun org-papers-open-root-file ()
   (interactive)
   (find-file-existing (concat org-papers--note-root-directory org-papers--root-file)))
+
 
 
 ;;;;;;;;;;
@@ -324,13 +365,13 @@ selected even if `org-zotxt-default-search-method' is non-nil"
     (org-papers--redraw-buffer cur-node cur-parent)
     (org-papers--set-pos-idx 0)))
 
-(defun org-papers-display-dired (&optional FILENAME)
-  (interactive)
-  (org-papers-visualize FILENAME org-papers/dired-mode))
+;; (defun org-papers-display-dired (&optional FILENAME)
+;;   (interactive)
+;;   (org-papers-visualize FILENAME org-papers/dired-mode))
 
-(defun org-papers-display-tree (&optional FILENAME)
-  (interactive)
-  (org-papers-visualize FILENAME org-papers/tree-mode))
+;; (defun org-papers-display-tree (&optional FILENAME)
+;;   (interactive)
+;;   (org-papers-visualize FILENAME org-papers/tree-mode))
 
 
 (defvar org-papers-mode-map nil "Keymap for `org-papers-mode'")
@@ -375,10 +416,10 @@ selected even if `org-zotxt-default-search-method' is non-nil"
 
 (root-leader
   "po" 'org-papers-open-root-file
-  "pp" 'org-papers--open-zotero-attachment
-  "pn" 'org-papers--open-notes-file
+  "pp" 'org-papers-open-zotero-attachment
+  "pn" 'org-papers-open-notes-file
   "pe" 'org-papers-take-notes
-  "pa" 'org-papers--insert-paper-heading)
+  "pi" 'org-papers-insert-paper-heading)
 
 
 (provide 'init-org-papers)
