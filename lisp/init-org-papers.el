@@ -201,6 +201,8 @@ selected even if `org-zotxt-default-search-method' is non-nil"
   (interactive)
   (find-file-existing (concat org-papers--note-root-directory org-papers--root-file)))
 
+(defun org-papers-link-to-paper-notes ()
+  (interactive))
 
 
 ;;;;;;;;;;

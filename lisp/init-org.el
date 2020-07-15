@@ -22,6 +22,12 @@
                                  ("-ignore")))
   (org-treat-S-cursor-todo-selection-as-state-change nil)
 
+
+  (org-link-frame-setup '((vm . vm-visit-folder-other-frame)
+                          (vm-imap . vm-visit-imap-folder-other-frame)
+                          (gnus . org-gnus-no-new-news)
+                          (file . find-file)
+                          (wl . wl-other-frame)))
   ;; Ability to use key shortcuts for selecting a state
   (org-use-fast-todo-selection t)
 
@@ -60,13 +66,13 @@
   (setq org-support-shift-select 'always)
 
   
-  (defun mattroot/org-export-output-file-name-modified (orig-fun extension &optional subtreep pub-dir)
-    (unless mattroot/org-pub-dir
-      (setq mattroot/org-pub-dir "exported-org-files")
-      (unless (file-directory-p mattroot/org-pub-dir)
-	(make-directory mattroot/org-pub-dir)))
-    (apply orig-fun extension subtreep mattroot/org-pub-dir nil))
-  (advice-add 'org-export-output-file-name :around #'mattroot/org-export-output-file-name-modified)
+  ;; (defun mattroot/org-export-output-file-name-modified (orig-fun extension &optional subtreep pub-dir)
+  ;;   (unless mattroot/org-pub-dir
+  ;;     (setq mattroot/org-pub-dir "exported-org-files")
+  ;;     (unless (file-directory-p mattroot/org-pub-dir)
+  ;;       (make-directory mattroot/org-pub-dir)))
+  ;;   (apply orig-fun extension subtreep mattroot/org-pub-dir nil))
+  ;; (advice-add 'org-export-output-file-name :around #'mattroot/org-export-output-file-name-modified)
 
   (setcdr (assoc "\\.pdf\\'" org-file-apps) 'pdf-tools)
 
@@ -164,7 +170,43 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 		("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
 		("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
 		("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
+
+
+  (require 'ox-publish)
+  ;; (setq org-publish-project-alist
+  ;;     '(
+  ;;       ("braindump"
+  ;;        :base-directory)
+  ;;     ))
+
+  
   ) ;; use-package org
+
+(root-leader
+  "d" '(:ignore t :which-key "[d]aily Journal"))
+
+
+(use-package org-journal
+  :ensure t
+  :bind (("M-m d n" . 'org-journal-new-entry))
+  :custom
+  (org-journal-dir "~/org/journal")
+  (org-journal-find-file 'find-file)
+  :config
+  (defun org-journal-save-entry-and-exit()
+    "Simple convenience function.
+  Saves the buffer of the current day's entry and kills the window
+  Similar to org-capture like behavior"
+    (interactive)
+    (save-buffer)
+    (kill-buffer-and-window))
+  (define-key org-journal-mode-map (kbd "C-x C-s") 'org-journal-save-entry-and-exit)
+
+  ;; (root-leader
+  ;;   "d" 'org-journal-save-entry-and-exit)
+  )
+
+
 
 ;;;;
 ;; Pretty bullets
@@ -224,6 +266,10 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
   (org-ref-default-bibliography '("~/Google Drive/bib/full_library.bib"))
   :config
   (org-ref-ivy-cite-completion))
+
+(use-package ox-hugo
+  :ensure t
+  :after ox)
 
 
 (provide 'init-org)

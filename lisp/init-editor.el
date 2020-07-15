@@ -107,18 +107,20 @@
   :ensure t)
 
 (root-leader
-  "n" "neotree")
+  "t" "neotree")
 
 (use-package neotree
   :ensure t
-  :bind (("M-m n" . neotree))
+  :bind (("M-m t" . neotree))
   :config (setq neo-smart-open t))
 
 ;; Javascript tab level
 (setq js-indent-level 2)
-;; (add-hook 'json-mode-hook
-;;           (lambda ()
-;;             (make-local-variable 'js-indent-level)
-;;             (setq js-indent-level 2)))
+
+;; (use-package super-save
+;;   :ensure t
+;;   :config
+;;   (super-save-mode +1)
+;;   (setq auto-save-default nil))
 
 (provide 'init-editor)

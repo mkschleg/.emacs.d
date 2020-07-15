@@ -8,7 +8,7 @@
 				       (concat \"\[\[ref:\" $1 \"\]\]\")
 				     $2))")
    '("if-standalone" . "\\ifdefined\\mattrootcollection \\else $1 \\fi")
-   '("bibliography" . "\\bibliography{full_bib}"))
+   '("bibliography" . "bibliographystyle:author-year \n bibliography:/Users/Matt/GD/bib/full_library.bib"))
   "Functional org macros to be used globally")
 
 (provide 'func-macros)

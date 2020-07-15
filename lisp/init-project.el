@@ -10,5 +10,7 @@
   :ensure t)
 
 (root-leader
-  "p" '(:keymap projectile-command-map :which-key "projectile"))
+  "r" '(:keymap projectile-command-map :which-key "projectile"))
+
+(provide 'init-project)
 

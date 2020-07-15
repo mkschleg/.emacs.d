@@ -32,6 +32,7 @@
 (require 'init-persp)
 (require 'init-ivy)
 (require 'init-editor)
+(require 'init-project)
 
 ;;;;;;;;
 ;; Mode configs
@@ -47,5 +48,5 @@
 ;;;;;;;;
 (require 'init-org-notes)
 (require 'init-org-papers)
-(require 'init-org-daily)
+;; (require 'init-org-daily)
 ;; (require 'init-brain)

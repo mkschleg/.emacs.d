@@ -24,14 +24,14 @@
  '(magit-diff-use-overlays nil)
  '(package-selected-packages
    (quote
-    (request-deffered request-deferred lsp-julia json-rpc eglot-jl eglot neotree
-		      (eglot-jl :type git :host github :repo "non-Jedi/eglot-jl" :files
-				("*.el" "*.jl" "*.toml"))
-		      (eglot-jl :type git :host github :repo "non-Jedi/eglot-jl" :files
-				("*.el" "*.jl" "*.toml"))
-		      (eglot-jl :type git :host github :repo "non-Jedi/eglot-jl" :files
-				("*.el" "*.jl" "*.toml"))
-		      flycheck yaml-mode elpy company-anaconda comapny-anaconda pyvenv conda anaconda-mode zotxt org-bullets lsp-mode company rainbow-delimiters unfill ivy persp-mode refine s quelpa-use-package quelpa company-quickhelp ess ob-julia hl-todo yasnippet-snippets helm-lsp company-lsp lsp-ui jupyter julia-mode org-ref eyebrowse dimmer magit pdf-tools auctex-latexmk company-auctex latex-extra fullframe diminish auto-compile multiple-cursors spaceline smart-mode-line-powerline-theme powerline autopair yasnippet which-key use-package undo-tree projectile nameless monokai-theme mmm-mode hydra helm-swoop god-mode general font-lock+ evil-unimpaired diff-hl dashboard counsel company-statistics company-math auctex aggressive-indent ace-window)))
+    (org-journal eglot-jl eglot org-roam-bibtex ox-hugo company-org-roam org-roam emacsql-sqlite emacsql super-save counsel-projectile request-deffered request-deferred lsp-julia json-rpc neotree
+                 (eglot-jl :type git :host github :repo "non-Jedi/eglot-jl" :files
+                           ("*.el" "*.jl" "*.toml"))
+                 (eglot-jl :type git :host github :repo "non-Jedi/eglot-jl" :files
+                           ("*.el" "*.jl" "*.toml"))
+                 (eglot-jl :type git :host github :repo "non-Jedi/eglot-jl" :files
+                           ("*.el" "*.jl" "*.toml"))
+                 flycheck yaml-mode elpy company-anaconda comapny-anaconda pyvenv conda anaconda-mode zotxt org-bullets lsp-mode company rainbow-delimiters unfill ivy persp-mode refine s quelpa-use-package quelpa company-quickhelp ess ob-julia hl-todo yasnippet-snippets helm-lsp company-lsp lsp-ui jupyter julia-mode org-ref eyebrowse dimmer magit pdf-tools auctex-latexmk company-auctex latex-extra fullframe diminish auto-compile multiple-cursors spaceline smart-mode-line-powerline-theme powerline autopair yasnippet which-key use-package undo-tree projectile nameless monokai-theme mmm-mode hydra helm-swoop god-mode general font-lock+ evil-unimpaired diff-hl dashboard counsel company-statistics company-math auctex aggressive-indent ace-window)))
  '(pos-tip-background-color "#FFFACE")
  '(pos-tip-foreground-color "#272822")
  '(safe-local-variable-values
@@ -43,7 +43,7 @@
      (org-notes-root-file . "../math.org")
      (org-notes-root-file . \.\./math\.org)
      (eval setq flycheck-clang-include-path
-	   (list "/Users/Matt/Documents/Research/projects/GVF/inc" "/Users/Matt/Documents/Research/projects/GVF/lib" "/opt/local/include/libomp"))
+           (list "/Users/Matt/Documents/Research/projects/GVF/inc" "/Users/Matt/Documents/Research/projects/GVF/lib" "/opt/local/include/libomp"))
      (company-clang-arguments "-I/Users/Matt/Documents/Research/projects/GVF/inc" "-I/Users/Matt/Documents/Research/projects/GVF/lib" "-I/opt/local/include/libomp" "-std=c++14"))))
  '(vc-annotate-background nil)
  '(vc-annotate-color-map
@@ -75,4 +75,4 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(org-roam-link ((t (:inherit org-link :foreground "#9c8321")))))

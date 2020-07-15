@@ -31,9 +31,8 @@
       (org-insert-time-stamp (current-time) nil t))))
 
 
-
-(root-leader
-  "d" 'org-daily-insert-today)
+;; (root-leader
+;;   "d" 'org-daily-insert-today)
 
 (provide 'init-org-daily)
 

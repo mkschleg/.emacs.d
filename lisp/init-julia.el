@@ -9,8 +9,6 @@
   (setq inferior-julia-program-name "julia")
   )
 
-
-
 (use-package jupyter
   :ensure t
   :bind (("M-m j r" . jupyter-run-repl)
@@ -27,7 +25,7 @@
   :config
   ;; (add-hook 'julia-mode-hook 'eglot)
   (setq eglot-connect-timeout 300)
-  (setq eglot-jl-default-environment "~/.julia/environments/v1.3"))
+  (eglot-jl-init))
 
 ;; (use-package lsp-mode
 ;;   :ensure t)
