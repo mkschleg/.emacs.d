@@ -3,6 +3,7 @@
 
 ;; Org-roam
 ;;   For flat org-note taking structure.
+
 (root-leader
   "n" '(:ignore t :which-key "notes")
   "nr" 'org-ref-ivy-insert-cite-link)
@@ -20,7 +21,8 @@
              ("M-m n f" . org-roam-find-file)
              ("M-m n g" . org-roam-show-graph)
              ("M-m n i" . org-roam-insert)
-             ("M-m n o" . org-roam-jump-to-index))
+             ("M-m n o" . org-roam-jump-to-index)
+             ("M-m n e" . org-roam-ox-hugo-export-zettle))
       :config
       (require 'org-roam-protocol)
       (setq org-roam-capture-templates
@@ -73,8 +75,6 @@
 #+TITLE: ${title}\n"
            :unnarrowed t)))
 
-      ;; from https://org-roam.readthedocs.io/en/latest/org_export/
-      
       (defun mattroot/org-roam--backlinks-list-with-content (file)
         (with-temp-buffer
           (if-let* ((backlinks (org-roam--get-backlinks file))
@@ -87,7 +87,7 @@
                         (bls (cdr group)))
                     (insert (format "** [[file:%s][%s]]\n"
                                     file-from
-                                    (org-roam--get-title-or-slug file-from)))
+                                    (org-roam-db--get-title file-from)))
                     (dolist (backlink bls)
                       (pcase-let ((`(,file-from _ ,props) backlink))
                         (insert (s-trim (s-replace "\n" " " (plist-get props :content))))
@@ -101,9 +101,7 @@
               (goto-char (point-max))
               (insert (concat "\n* Backlinks\n") links)))))
 
-      (add-hook 'org-export-before-processing-hook 'mattroot/org-export-preprocessor)
-      
-      )
+      (add-hook 'org-export-before-processing-hook 'mattroot/org-export-preprocessor))
 
 (use-package org-roam-bibtex
   :ensure t
@@ -139,7 +137,47 @@ bibliography:/Users/Matt/GD/bib/full_library.bib
 
   (require 'org-ref-citeproc)
 
-  (defun mattroot/ob-export-preprocessor (&optional backend)
+
+
+
+
+  (add-hook 'org-export-before-processing-hook 'mattroot/ob-export-preprocessor)
+
+
+  (require 'zotxt)
+  (require 'deferred)
+  (require 'request)
+  (require 'f)
+
+  (defun org-roam--open-zotero-attachment-from-id (id &optional arg)
+    (lexical-let ((item-id id)
+                  (arg arg))
+      (message item-id)
+      (deferred:$
+        (request-deferred
+         (format "%s/items" zotxt-url-base)
+         :params `(("key" . ,item-id) ("format" . "paths"))
+         :parser 'json-read)
+        (deferred:nextc it
+          (lambda (response)
+            (let ((paths (cdr (assq 'paths (elt (request-response-data response) 0)))))
+              (find-file-other-window (org-zotxt-choose-path paths) arg))))
+        (if zotxt--debug-sync (deferred:sync! it)))))
+
+  (defun org-roam-bibtex-open-zotero-pdf ()
+    (interactive)
+    (org-roam--open-zotero-attachment-from-id (mattroot/org-kwd "ZOTERO")))
+
+  (defun org-roam-ox-hugo-export-zettle ()
+    (interactive)
+    (mapc
+     (lambda (file)
+       (set-buffer (find-file-noselect file))
+       (ignore-errors (org-hugo-export-wim-to-md)))
+     (directory-files-recursively org-roam-directory "\\.org$"))))
+
+
+(defun mattroot/ob-export-preprocessor (&optional backend)
     "Format citations and bibliography for BACKEND.
 Warning.  Destructive to your document! Will replace links.
 Meant to be used in export on a temporary version of the
@@ -218,7 +256,7 @@ documents."
                       (file (if pair
                                 (cdr pair)
                               nil))
-                      (link (mattroot/ob-get-ref-link-insert file repl)))
+                      (link (mattroot/ob-get-ref-link-insert (cadr file) repl)))
                  (setf (buffer-substring start end) (concat link trailing-space)))
 
 
@@ -252,41 +290,6 @@ documents."
            (message "Warning: No bibliography link found although there are citations to process"))))))
 
 
-  (add-hook 'org-export-before-processing-hook 'mattroot/ob-export-preprocessor)
-
-
-  (require 'zotxt)
-  (require 'deferred)
-  (require 'request)
-  (require 'f)
-
-  (defun org-roam--open-zotero-attachment-from-id (id &optional arg)
-    (lexical-let ((item-id id)
-                  (arg arg))
-      (message item-id)
-      (deferred:$
-        (request-deferred
-         (format "%s/items" zotxt-url-base)
-         :params `(("key" . ,item-id) ("format" . "paths"))
-         :parser 'json-read)
-        (deferred:nextc it
-          (lambda (response)
-            (let ((paths (cdr (assq 'paths (elt (request-response-data response) 0)))))
-              (find-file-other-window (org-zotxt-choose-path paths) arg))))
-        (if zotxt--debug-sync (deferred:sync! it)))))
-
-  (defun org-roam-bibtex-open-zotero-pdf ()
-    (interactive)
-    (org-roam--open-zotero-attachment-from-id (mattroot/org-kwd "ZOTERO")))
-
-  (defun org-roam-ox-hugo-export-zettle ()
-    (interactive)
-    (mapc
-     (lambda (file)
-       (set-buffer (find-file-noselect file))
-       (ignore-errors (org-hugo-export-wim-to-md)))
-     (directory-files-recursively org-roam-directory "\\.org$")))
-  )
 
 ;; (with-current-buffer "*scratch*"
 ;;   (insert (string-join (directory-files-recursively org-roam-directory "\\.org$") "\n"))
@@ -295,7 +298,7 @@ documents."
 
 (defun mattroot/ob-get-ref-link-insert (file repl)
   (if file
-      (org-roam--format-link file repl)
+      (org-roam-format-link file repl)
     repl))
 
 (defun mattroot/org-kwds ()
@@ -347,27 +350,8 @@ selected even if `org-zotxt-default-search-method' is non-nil"
 (use-package company-org-roam
   :quelpa
   (company-org-roam :fetcher github :repo "jethrokuan/company-org-roam")
-  ;; :straight (:host github :repo "jethrokuan/company-org-roam")
   :config
   (push 'company-org-roam company-backends))
-
-
-;; (use-package org-ref-ox-hugo
-;;   ;; :after org org-ref ox-hugo
-;;   :config
-;;   (add-to-list 'org-ref-formatted-citation-formats
-;;                '("md"
-;;                  ("article" . "${author}, *${title}*, ${journal}, *${volume}(${number})*, ${pages} (${year}). ${doi}")
-;;                  ("inproceedings" . "${author}, *${title}*, In ${editor}, ${booktitle} (pp. ${pages}) (${year}). ${address}: ${publisher}.")
-;;                  ("book" . "${author}, *${title}* (${year}), ${address}: ${publisher}.")
-;;                  ("phdthesis" . "${author}, *${title}* (Doctoral dissertation) (${year}). ${school}, ${address}.")
-;;                  ("inbook" . "${author}, *${title}*, In ${editor} (Eds.), ${booktitle} (pp. ${pages}) (${year}). ${address}: ${publisher}.")
-;;                  ("incollection" . "${author}, *${title}*, In ${editor} (Eds.), ${booktitle} (pp. ${pages}) (${year}). ${address}: ${publisher}.")
-;;                  ("proceedings" . "${editor} (Eds.), _${booktitle}_ (${year}). ${address}: ${publisher}.")
-;;                  ("unpublished" . "${author}, *${title}* (${year}). Unpublished manuscript.")
-;;                  ("misc" . "${author} (${year}). *${title}*. Retrieved from [${howpublished}](${howpublished}). ${note}.")
-;;                  (nil . "${author}, *${title}* (${year})."))))
-
 
 
 (provide 'init-org-notes)

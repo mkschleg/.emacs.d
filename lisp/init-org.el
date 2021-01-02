@@ -1,6 +1,4 @@
 
-
-
 (use-package org
   :functions
   org-renumber-environment
@@ -200,12 +198,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
     (interactive)
     (save-buffer)
     (kill-buffer-and-window))
-  (define-key org-journal-mode-map (kbd "C-x C-s") 'org-journal-save-entry-and-exit)
-
-  ;; (root-leader
-  ;;   "d" 'org-journal-save-entry-and-exit)
-  )
-
+  (define-key org-journal-mode-map (kbd "C-x C-s") 'org-journal-save-entry-and-exit))
 
 
 ;;;;
@@ -215,8 +208,6 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 (use-package org-bullets
   :ensure t
   :hook (org-mode . (lambda () (org-bullets-mode 1))))
-
-
 
 
 ;;;;
