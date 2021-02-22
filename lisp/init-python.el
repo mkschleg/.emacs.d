@@ -30,7 +30,8 @@
 (use-package pyvenv
   :ensure t
   :init
-  (setenv "WORKON_HOME" "~/opt/miniconda3/envs")
+  ;; (setenv "WORKON_HOME" "~/opt/miniconda3/envs")
+  (setenv "WORKON_HOME" "~/.pyenv/shims/")
   (pyvenv-mode 1))
 
 

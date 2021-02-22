@@ -1,6 +1,6 @@
 
 
-(windmove-default-keybindings 'meta)
+(windmove-default-keybindings)
 
 (setq-default indicate-empty-lines t)
 (global-subword-mode 1)
@@ -122,5 +122,8 @@
 ;;   :config
 ;;   (super-save-mode +1)
 ;;   (setq auto-save-default nil))
+
+(use-package visual-fill-column
+  :ensure t)
 
 (provide 'init-editor)

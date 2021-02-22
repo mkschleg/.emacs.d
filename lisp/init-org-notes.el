@@ -74,7 +74,7 @@
 #+hugo_custom_front_matter: :notetype book
 #+TITLE: ${title}\n"
            :unnarrowed t)))
-
+      
       (defun mattroot/org-roam--backlinks-list-with-content (file)
         (with-temp-buffer
           (if-let* ((backlinks (org-roam--get-backlinks file))
@@ -90,10 +90,11 @@
                                     (org-roam-db--get-title file-from)))
                     (dolist (backlink bls)
                       (pcase-let ((`(,file-from _ ,props) backlink))
-                        (insert (s-trim (s-replace "\n" " " (plist-get props :content))))
+                        (insert (s-trim (s-replace "\n" " " (if (plist-get props :content)
+                                                                (plist-get props :content)
+                                                              ""))))
                         (insert "\n\n")))))))
-          (buffer-string)))
-      
+    (buffer-string)))
       (defun mattroot/org-export-preprocessor (backend)
         (let ((links (mattroot/org-roam--backlinks-list-with-content (buffer-file-name))))
           (unless (string= links "")
@@ -175,6 +176,8 @@ bibliography:/Users/Matt/GD/bib/full_library.bib
        (set-buffer (find-file-noselect file))
        (ignore-errors (org-hugo-export-wim-to-md)))
      (directory-files-recursively org-roam-directory "\\.org$"))))
+
+
 
 
 (defun mattroot/ob-export-preprocessor (&optional backend)

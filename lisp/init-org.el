@@ -6,16 +6,20 @@
   mattroot/org-skip-subtree-if-priority
   mattroot/org-export-output-file-name-modified
   :bind (("C-c a" . org-agenda))
-  :hook ((org-mode . (lambda () (visual-line-mode 1))))
+  :hook ((org-mode . (lambda () (visual-line-mode 1)))
+         (org-mode . visual-fill-column-mode)
+         (org-mode . (lambda () (setq visual-fill-column-center-text t)))
+         (org-mode . (lambda () (setq fill-column 150))))
   :custom
   (org-directory "~/org/")
   (org-default-notes-file (concat org-directory "/refile.org"))
   (org-highlight-latex-and-related '(latex script entities))
   (org-agenda-files (list "~/org/"
-			  "~/org/recur/"
-			  "~/Documents/Research/notes/projects/"
-			  "~/Documents/Research/notes/topics/"
-			  "~/Documents/Research/notes/courses/"))
+                          "~/Documents/Research/notes/projects/"))
+			  ;; "~/org/recur/"
+			  
+			  ;; "~/Documents/Research/notes/topics/"
+			  ;; "~/Documents/Research/notes/courses/"
   (org-agenda-tag-filter-preset (quote
                                  ("-ignore")))
   (org-treat-S-cursor-todo-selection-as-state-change nil)
@@ -33,7 +37,7 @@
   (org-hierarchical-todo-statistics nil)
 
   ;; Org to latex pdf process
-  (org-latex-pdf-process (list "latexmk -pdf -bibtex %f -output-directory=%o"))
+  (org-latex-pdf-process (list "latexmk --shell-escape -pdf -bibtex %f -output-directory=%o"))
 
   ;; Larger equations
   (org-latex-prefer-user-labels t)
@@ -41,8 +45,13 @@
   (mattroot/org-pub-dir "/Users/Matt/org/org-export-files")
   (org-latex-packages-alist '(("" "natbib" nil)))
   
-  (org-default-priority ?C)
+  (org-default-priority ?D)
   (org-lowest-priority ?D)
+
+  (org-archive-location "~/org/archive.org::datetree/* From %s")
+
+  (org-refile-targets '((nil :maxlevel . 1)
+                       (org-agenda-files :maxlevel . 1)))
   
   (org-src-tab-acts-natively nil)
 
@@ -52,15 +61,17 @@
   (indent-tabs-mode nil)
   :config
 
+  (require 'org-habit)
   (require 'org-habit-plus)
 
   ;; Export details
   (add-to-list 'org-latex-packages-alist '("" "fullpage" nil))
 
-  ;; (add-hook 'org-shiftup-final-hook 'windmove-up)
+  (add-hook 'org-shiftup-final-hook 'windmove-up)
   (add-hook 'org-shiftleft-final-hook 'windmove-left)
-  ;; (add-hook 'org-shiftdown-final-hook 'windmove-down)
+  (add-hook 'org-shiftdown-final-hook 'windmove-down)
   (add-hook 'org-shiftright-final-hook 'windmove-right)
+  
   (setq org-support-shift-select 'always)
 
   
@@ -90,102 +101,14 @@
   (setq org-edit-src-content-indentation 0)
   (setq org-src-preserve-indentation t)
 
-  (defun mattroot/org-skip-subtree-if-habit ()
-    "Skip an agenda entry if it has a STYLE property equal to \"habit\"."
-    (let ((subtree-end (save-excursion (org-end-of-subtree t))))
-      (if (string= (org-entry-get nil "STYLE") "habit")
-          subtree-end
-	nil)))
-  (defun mattroot/org-skip-subtree-if-priority (priority)
-    "Skip an agenda subtree if it has a priority of PRIORITY.
-
-PRIORITY may be one of the characters ?A, ?B, or ?C."
-    (let ((subtree-end (save-excursion (org-end-of-subtree t)))
-          (pri-value (* 1000 (- org-lowest-priority priority)))
-          (pri-current (org-get-priority (thing-at-point 'line t))))
-      (if (= pri-value pri-current)
-          subtree-end
-	nil)))
-  
-  (setq org-agenda-custom-commands
-	'(("d" "Daily agenda and all TODOs"
-           ((tags "PRIORITY=\"A\""
-                  ((org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo 'done)
-						  (org-agenda-skip-if nil '(scheduled))))
-                   (org-agenda-overriding-header "High-priority unfinished tasks:")))
-	    (tags "REXP"
-		  ((org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo 'done)
-						  (org-agenda-skip-if nil '(scheduled))))
-                   (org-agenda-overriding-header "Running Experiments:")))
-	    (tags "EXP"
-                  ((org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo 'done)
-						  (org-agenda-skip-if nil '(scheduled))))
-                   (org-agenda-overriding-header "Experiments:")))
-            (agenda "" ((org-agenda-ndays 1)))
-	    (tags "PRIORITY=\"B\""
-                  ((org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo 'done)
-	    					  (org-agenda-skip-if nil '(scheduled))))
-                   (org-agenda-overriding-header "Mid-priority unfinished tasks:")))
-            (alltodo ""
-                     ((org-agenda-skip-function '(or (mattroot/org-skip-subtree-if-habit)
-                                                     (mattroot/org-skip-subtree-if-priority ?A)
-						     (mattroot/org-skip-subtree-if-priority ?B)
-                                                     (org-agenda-skip-if nil '(scheduled deadline))))
-                      (org-agenda-overriding-header "ALL normal priority tasks:"))))
-           ((org-agenda-compact-blocks t)))))
-
-
-  (setq org-todo-keywords
-	'((sequence "TODO(t)" "NEXT(n)" "IN-PROGRESS(p)" "|" "DONE(d)")
-          (sequence "WAITING(w)" "RUNNING(r)" "DOWNLOAD(o)" "|" "CANCELLED(c)")))
-
-  ;; Set colors for todo states
-  (setq org-todo-keyword-faces
-	'(("TODO" . (:foreground "red" :weight bold))
-          ("NEXT" . (:foreground "yellow" :weight bold))
-          ("DONE" . org-done)
-          ("IN-PROGRESS" . (:foreground "yellow" :weight bold))
-          ("WAITING" . (:foreground "yellow" :weight bold))
-          ("RUNNING" . (:foreground "lightblue" :weight bold))
-	  ("DOWNLOAD" . (:foreground "orange" :weight bold))))
-
-  ;; Automatic todo updating for trees
-  (defun org-summary-todo (n-done n-not-done)
-    "Switch entry to DONE when all subentries are done, to TODO otherwise."
-    (let (org-log-done org-log-states)   ; turn off logging
-      (org-todo (if (= n-not-done 0)
-                    "DONE"
-                  (if (= n-done 0)
-                      "TODO"
-                    "IN-PROGRESS")))))
-  (add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
-
-  (setq org-todo-state-tags-triggers
-	(quote (("CANCELLED" ("CANCELLED" . t))
-		("WAITING" ("WAITING" . t))
-		("HOLD" ("WAITING") ("HOLD" . t))
-		(done ("WAITING") ("HOLD"))
-		("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
-		("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
-		("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
-
-
-  (require 'ox-publish)
-  ;; (setq org-publish-project-alist
-  ;;     '(
-  ;;       ("braindump"
-  ;;        :base-directory)
-  ;;     ))
-
-  
-  ) ;; use-package org
+  (require 'init-org-agenda)
+  (require 'ox-publish)) ;; use-package org
 
 (root-leader
   "d" '(:ignore t :which-key "[d]aily Journal"))
 
 
 (use-package org-journal
-  :ensure t
   :bind (("M-m d n" . 'org-journal-new-entry))
   :custom
   (org-journal-dir "~/org/journal")
@@ -198,7 +121,9 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
     (interactive)
     (save-buffer)
     (kill-buffer-and-window))
-  (define-key org-journal-mode-map (kbd "C-x C-s") 'org-journal-save-entry-and-exit))
+  (define-key org-journal-mode-map (kbd "C-x C-s") 'org-journal-save-entry-and-exit)
+  (setq org-default-priority ?D)
+  (setq org-lowest-priority ?D))
 
 
 ;;;;
