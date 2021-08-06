@@ -21,14 +21,14 @@
      ("#3C3D37" . 100)))
  '(magit-diff-use-overlays nil)
  '(package-selected-packages
-   '(org-journal org visual-fill-column eglot-jl eglot org-roam-bibtex ox-hugo company-org-roam org-roam emacsql-sqlite emacsql super-save counsel-projectile request-deffered request-deferred lsp-julia json-rpc neotree
+   '(org-journal org visual-fill-column ox-hugo company-org-roam emacsql-sqlite emacsql super-save counsel-projectile request-deffered request-deferred lsp-julia json-rpc neotree
                  (eglot-jl :type git :host github :repo "non-Jedi/eglot-jl" :files
                            ("*.el" "*.jl" "*.toml"))
                  (eglot-jl :type git :host github :repo "non-Jedi/eglot-jl" :files
                            ("*.el" "*.jl" "*.toml"))
                  (eglot-jl :type git :host github :repo "non-Jedi/eglot-jl" :files
                            ("*.el" "*.jl" "*.toml"))
-                 flycheck yaml-mode elpy company-anaconda comapny-anaconda pyvenv conda anaconda-mode zotxt org-bullets lsp-mode company rainbow-delimiters unfill ivy persp-mode refine s quelpa-use-package quelpa company-quickhelp ess ob-julia hl-todo yasnippet-snippets helm-lsp company-lsp lsp-ui jupyter julia-mode org-ref eyebrowse dimmer magit pdf-tools auctex-latexmk company-auctex latex-extra fullframe diminish auto-compile multiple-cursors spaceline smart-mode-line-powerline-theme powerline autopair yasnippet which-key undo-tree projectile nameless monokai-theme mmm-mode hydra helm-swoop god-mode general font-lock+ evil-unimpaired diff-hl dashboard counsel company-statistics company-math auctex aggressive-indent ace-window))
+                 flycheck yaml-mode elpy company-anaconda comapny-anaconda pyvenv conda anaconda-mode zotxt org-bullets lsp-mode rainbow-delimiters unfill ivy persp-mode refine s quelpa-use-package quelpa company-quickhelp ess ob-julia hl-todo yasnippet-snippets helm-lsp company-lsp lsp-ui jupyter julia-mode org-ref eyebrowse dimmer pdf-tools auctex-latexmk company-auctex latex-extra fullframe diminish auto-compile multiple-cursors spaceline smart-mode-line-powerline-theme powerline autopair yasnippet which-key undo-tree projectile nameless monokai-theme mmm-mode hydra helm-swoop god-mode general font-lock+ evil-unimpaired diff-hl dashboard counsel company-statistics company-math auctex aggressive-indent ace-window))
  '(pos-tip-background-color "#FFFACE")
  '(pos-tip-foreground-color "#272822")
  '(safe-local-variable-values

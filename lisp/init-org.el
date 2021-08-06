@@ -5,7 +5,8 @@
   mattroot/org-skip-subtree-if-habit
   mattroot/org-skip-subtree-if-priority
   mattroot/org-export-output-file-name-modified
-  :bind (("C-c a" . org-agenda))
+  :bind (("C-c a" . org-agenda)
+         ("C-c c" . org-capture))
   :hook ((org-mode . (lambda () (visual-line-mode 1)))
          (org-mode . visual-fill-column-mode)
          (org-mode . (lambda () (setq visual-fill-column-center-text t)))
@@ -16,14 +17,46 @@
   (org-highlight-latex-and-related '(latex script entities))
   (org-agenda-files (list "~/org/"
                           "~/Documents/Research/notes/projects/"))
-			  ;; "~/org/recur/"
-			  
-			  ;; "~/Documents/Research/notes/topics/"
-			  ;; "~/Documents/Research/notes/courses/"
+  (org-startup-folded nil)
+  
   (org-agenda-tag-filter-preset (quote
                                  ("-ignore")))
-  (org-treat-S-cursor-todo-selection-as-state-change nil)
 
+  (org-tag-alist '((:startgrouptag)
+                   ("persp")
+                   (:grouptags)
+                   ("vision")
+                   ("goal")
+                   ("question")
+                   ("scope")
+                   (:endgrouptag)
+                   (:startgrouptag)
+                   ("action")
+                   (:grouptags)
+                   ("message")
+                   ("review")
+                   ("code")
+                   ("read")
+                   ("write")
+                   ("analyze")
+                   (:endgrouptag)
+                   (:startgrouptag)
+                   ("wait")
+                   (:grouptags)
+                   ("experiment")
+                   ("colab")
+                   ("admin")
+                   (:endgrouptag)
+                   (:startgrouptag)
+                   ("note")
+                   (:grouptags)
+                   ("journal")
+                   ("conclusion")
+                   ("observation")
+                   ("data")
+                   (:endgrouptag)))
+
+  (org-treat-S-cursor-todo-selection-as-state-change nil)
 
   (org-link-frame-setup '((vm . vm-visit-folder-other-frame)
                           (vm-imap . vm-visit-imap-folder-other-frame)
@@ -48,7 +81,7 @@
   (org-default-priority ?D)
   (org-lowest-priority ?D)
 
-  (org-archive-location "~/org/archive.org::datetree/* From %s")
+  (org-archive-location "::* Archive")
 
   (org-refile-targets '((nil :maxlevel . 1)
                        (org-agenda-files :maxlevel . 1)))
@@ -59,10 +92,22 @@
   (org-habit-scheduled-past-days nil)
   (calendar-week-start-day 1)
   (indent-tabs-mode nil)
+  
   :config
 
   (require 'org-habit)
   (require 'org-habit-plus)
+
+  (setq org-capture-templates
+        '(("t" "Create generic task" entry
+           (file+headline org-default-notes-file "Tasks")
+           "* TODO %?\n %u\n %i")
+          ("i" "Create a inline Task" entry
+           (file+headline org-default-notes-file "Tasks")
+           "* TODO %?\n %i\n %a")
+          ("p" "Paper" entry
+           (file+headline org-default-notes-file "Read List")
+           "* %^{TITLE}\n %i %u\n %i %^{LINK}\n")))
 
   ;; Export details
   (add-to-list 'org-latex-packages-alist '("" "fullpage" nil))
@@ -74,22 +119,15 @@
   
   (setq org-support-shift-select 'always)
 
-  
-  ;; (defun mattroot/org-export-output-file-name-modified (orig-fun extension &optional subtreep pub-dir)
-  ;;   (unless mattroot/org-pub-dir
-  ;;     (setq mattroot/org-pub-dir "exported-org-files")
-  ;;     (unless (file-directory-p mattroot/org-pub-dir)
-  ;;       (make-directory mattroot/org-pub-dir)))
-  ;;   (apply orig-fun extension subtreep mattroot/org-pub-dir nil))
-  ;; (advice-add 'org-export-output-file-name :around #'mattroot/org-export-output-file-name-modified)
-
   (setcdr (assoc "\\.pdf\\'" org-file-apps) 'pdf-tools)
 
   (require 'init-org-macros)
 
+  
   (setq org-export-global-macros mattroot/org-macros)
 
   (global-unset-key (kbd "C-c ["))
+  (global-set-key [remap org-set-tags-command] #'counsel-org-tag)
 
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -102,7 +140,10 @@
   (setq org-src-preserve-indentation t)
 
   (require 'init-org-agenda)
-  (require 'ox-publish)) ;; use-package org
+  (require 'init-org-equations)
+  (require 'ox-publish)
+
+  );; use-package org31
 
 (root-leader
   "d" '(:ignore t :which-key "[d]aily Journal"))

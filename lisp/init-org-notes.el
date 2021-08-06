@@ -4,6 +4,8 @@
 ;; Org-roam
 ;;   For flat org-note taking structure.
 
+(setq org-roam-v2-ack t)
+
 (root-leader
   "n" '(:ignore t :which-key "notes")
   "nr" 'org-ref-ivy-insert-cite-link)
@@ -13,14 +15,14 @@
       (after-init . org-roam-mode)
       :custom
       (org-roam-directory "~/org/notes")
-      (org-roam-index-file "index.org")
-      (org-roam-link-title-format "%s")
+      ;; (org-roam-index-file "index.org")
+      ;; (org-roam-link-title-format "%s")
       :custom-face
       (org-roam-link ((t (:inherit org-link :foreground "#9c8321"))))
-      :bind (("M-m n l" . org-roam)
-             ("M-m n f" . org-roam-find-file)
-             ("M-m n g" . org-roam-show-graph)
-             ("M-m n i" . org-roam-insert)
+      :bind (("M-m n l" . org-roam-buffer)
+             ("M-m n f" . org-roam-node-find)
+             ;; ("M-m n g" . org-roam-show-graph)
+             ("M-m n i" . org-roam-node-insert)
              ("M-m n o" . org-roam-jump-to-index)
              ("M-m n e" . org-roam-ox-hugo-export-zettle))
       :config
@@ -96,11 +98,12 @@
                         (insert "\n\n")))))))
     (buffer-string)))
       (defun mattroot/org-export-preprocessor (backend)
-        (let ((links (mattroot/org-roam--backlinks-list-with-content (buffer-file-name))))
-          (unless (string= links "")
-            (save-excursion
-              (goto-char (point-max))
-              (insert (concat "\n* Backlinks\n") links)))))
+        ;; (let ((links (mattroot/org-roam--backlinks-list-with-content (buffer-file-name))))
+        ;;   (unless (string= links "")
+        ;;     (save-excursion
+        ;;       (goto-char (point-max))
+        ;;       (insert (concat "\n* Backlinks\n") links))))
+        )
 
       (add-hook 'org-export-before-processing-hook 'mattroot/org-export-preprocessor))
 
@@ -189,109 +192,109 @@ documents."
     ;; Get the style from bibliographystyle link
     ;; and eliminate bibliography style links
     ;; This will load all style modules
-    (cl-loop for link in (org-element-map
-                             (org-element-parse-buffer) 'link 'identity)
-             if (string= "bibliographystyle"
-                         (org-element-property :type link))
-             do
-             ;; get path for style and load it
-             (load-library (org-element-property :path link))
-             ;; get rid of the link in the buffer
-             (setf (buffer-substring (org-element-property :begin link)
-                                     (org-element-property :end link))
-                   ""))
+    ;; (cl-loop for link in (org-element-map
+    ;;                          (org-element-parse-buffer) 'link 'identity)
+    ;;          if (string= "bibliographystyle"
+    ;;                      (org-element-property :type link))
+    ;;          do
+    ;;          ;; get path for style and load it
+    ;;          (load-library (org-element-property :path link))
+    ;;          ;; get rid of the link in the buffer
+    ;;          (setf (buffer-substring (org-element-property :begin link)
+    ;;                                  (org-element-property :end link))
+    ;;                ""))
 
-    (orcp-collect-citations)
-    (orcp-collect-unique-entries)
+    ;; (orcp-collect-citations)
+    ;; (orcp-collect-unique-entries)
 
-    (let ((link-replacements (cl-loop for link in *orcp-citation-links*
-                                      for repl in (orcp-get-citation-replacements)
-                                      collect
-                                      (list repl
-                                            (org-element-property :begin link)
-                                            (org-element-property :end link)
-                                            (org-element-property :path link))))
-          (bibliography-string (orcp-formatted-bibliography))
-          punctuation
-          trailing-space
-          bibliography-link)
+    ;; (let ((link-replacements (cl-loop for link in *orcp-citation-links*
+    ;;                                   for repl in (orcp-get-citation-replacements)
+    ;;                                   collect
+    ;;                                   (list repl
+    ;;                                         (org-element-property :begin link)
+    ;;                                         (org-element-property :end link)
+    ;;                                         (org-element-property :path link))))
+    ;;       (bibliography-string (orcp-formatted-bibliography))
+    ;;       punctuation
+    ;;       trailing-space
+    ;;       bibliography-link)
 
-      ;; replace citation links
-      (cl-loop for (repl start end ref) in (reverse link-replacements)
-               for link in (reverse *orcp-citation-links*)
-               do
-               ;; chomp leading spaces if needed
-               (when (orcp-get-citation-style
-                      'chomp-leading-space
-                      (intern (org-element-property :type link)))
-                 (goto-char start)
-                 (while (and (not (sentence-beginning-p))
-                             (looking-back " " (- (point) 2)))
-                   (delete-char -1)
-                   (setq start (- start 1))
-                   (setq end (- end 1))))
+    ;;   ;; replace citation links
+    ;;   (cl-loop for (repl start end ref) in (reverse link-replacements)
+    ;;            for link in (reverse *orcp-citation-links*)
+    ;;            do
+    ;;            ;; chomp leading spaces if needed
+    ;;            (when (orcp-get-citation-style
+    ;;                   'chomp-leading-space
+    ;;                   (intern (org-element-property :type link)))
+    ;;              (goto-char start)
+    ;;              (while (and (not (sentence-beginning-p))
+    ;;                          (looking-back " " (- (point) 2)))
+    ;;                (delete-char -1)
+    ;;                (setq start (- start 1))
+    ;;                (setq end (- end 1))))
 
-               ;; chomp trailing spaces if needed
-               (when (orcp-get-citation-style
-                      'chomp-trailing-space
-                      (intern (org-element-property :type link)))
-                 (goto-char end)
-                 (while (looking-back " " (- (point) 2))
-                   (delete-char 1)))
+    ;;            ;; chomp trailing spaces if needed
+    ;;            (when (orcp-get-citation-style
+    ;;                   'chomp-trailing-space
+    ;;                   (intern (org-element-property :type link)))
+    ;;              (goto-char end)
+    ;;              (while (looking-back " " (- (point) 2))
+    ;;                (delete-char 1)))
 
-               ;; Check for transposing punctuation
-               (setq punctuation nil)
-               (when (orcp-get-citation-style
-                      'transpose-punctuation
-                      (intern (org-element-property :type link)))
-                 ;; goto end of link
-                 (goto-char end)
-                 (when (looking-at "\\.\\|,\\|;")
-                   (setq punctuation (buffer-substring end (+ 1 end)))
-                   (delete-char 1)))
+    ;;            ;; Check for transposing punctuation
+    ;;            (setq punctuation nil)
+    ;;            (when (orcp-get-citation-style
+    ;;                   'transpose-punctuation
+    ;;                   (intern (org-element-property :type link)))
+    ;;              ;; goto end of link
+    ;;              (goto-char end)
+    ;;              (when (looking-at "\\.\\|,\\|;")
+    ;;                (setq punctuation (buffer-substring end (+ 1 end)))
+    ;;                (delete-char 1)))
 
-               ;; preserve trailing space
-               (goto-char end)
-               (setq trailing-space (if (looking-back " " (line-beginning-position)) " " ""))
+    ;;            ;; preserve trailing space
+    ;;            (goto-char end)
+    ;;            (setq trailing-space (if (looking-back " " (line-beginning-position)) " " ""))
 
-               (let* ((completions (org-roam--get-ref-path-completions))
-                      (pair (assoc ref completions))
-                      (file (if pair
-                                (cdr pair)
-                              nil))
-                      (link (mattroot/ob-get-ref-link-insert (cadr file) repl)))
-                 (setf (buffer-substring start end) (concat link trailing-space)))
+    ;;            (let* ((completions (org-roam--get-ref-path-completions))
+    ;;                   (pair (assoc ref completions))
+    ;;                   (file (if pair
+    ;;                             (cdr pair)
+    ;;                           nil))
+    ;;                   (link (mattroot/ob-get-ref-link-insert (cadr file) repl)))
+    ;;              (setf (buffer-substring start end) (concat link trailing-space)))
 
 
-               (when punctuation
-                 (goto-char start)
-                 ;; I can't figure out why this is necessary. I would have thought
-                 ;; the chomp leading spaces would get it.
-                 (when (thing-at-point 'whitespace)
-                   (delete-char -1))
-                 (insert punctuation)))
+    ;;            (when punctuation
+    ;;              (goto-char start)
+    ;;              ;; I can't figure out why this is necessary. I would have thought
+    ;;              ;; the chomp leading spaces would get it.
+    ;;              (when (thing-at-point 'whitespace)
+    ;;                (delete-char -1))
+    ;;              (insert punctuation)))
 
-      ;; Insert bibliography section at the bibliography link
-      (setq bibliography-link (cl-loop for link
-                                       in (org-element-map
-                                              (org-element-parse-buffer)
-                                              'link 'identity)
-                                       if (string= "bibliography"
-                                                   (org-element-property :type link))
-                                       collect link))
-      (pcase (length bibliography-link)
-        ((pred (< 1)) (error "Only one bibliography link allowed"))
-        ((pred (= 1))
-         ;; replace bibliography link
-         (setq bibliography-link (car bibliography-link))
-         (setf (buffer-substring (org-element-property :begin bibliography-link)
-                                 (org-element-property :end bibliography-link))
-               bibliography-string))
-        ((pred (= 0))
-         ;; no bibliography link in document
-         (when link-replacements
-           (message "Warning: No bibliography link found although there are citations to process"))))))
-
+    ;;   ;; Insert bibliography section at the bibliography link
+    ;;   (setq bibliography-link (cl-loop for link
+    ;;                                    in (org-element-map
+    ;;                                           (org-element-parse-buffer)
+    ;;                                           'link 'identity)
+    ;;                                    if (string= "bibliography"
+    ;;                                                (org-element-property :type link))
+    ;;                                    collect link))
+    ;;   (pcase (length bibliography-link)
+    ;;     ((pred (< 1)) (error "Only one bibliography link allowed"))
+    ;;     ((pred (= 1))
+    ;;      ;; replace bibliography link
+    ;;      (setq bibliography-link (car bibliography-link))
+    ;;      (setf (buffer-substring (org-element-property :begin bibliography-link)
+    ;;                              (org-element-property :end bibliography-link))
+    ;;            bibliography-string))
+    ;;     ((pred (= 0))
+    ;;      ;; no bibliography link in document
+    ;;      (when link-replacements
+    ;;        (message "Warning: No bibliography link found although there are citations to process"))))))
+)
 
 
 ;; (with-current-buffer "*scratch*"
