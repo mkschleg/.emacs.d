@@ -1,4 +1,8 @@
 
+
+(when (string= system-type "darwin")       
+  (setq dired-use-ls-dired nil))
+
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 (setq load-prefer-newer t)
 
@@ -19,6 +23,8 @@
   "Reload the config for emacs."
   (interactive)
   (load-file "~/.emacs"))
+
+
 
 ;;;;;;
 ;; Core 
@@ -46,7 +52,7 @@
 ;;;;;;;;
 ;; Extras
 ;;;;;;;;
-;; (require 'init-org-notes)
+(require 'init-org-notes)
 ;; (require 'init-org-papers)
 ;; (require 'init-org-daily)
 ;; (require 'init-brain)

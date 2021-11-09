@@ -46,11 +46,11 @@
   :ensure t
   :hook (TeX-mode . company-auctex-init))
 
-(use-package auctex-latexmk
-  :ensure t
-  :hook (LaTeX-mode . auctex-latexmk-setup)
-  :init
-  (setq auctex-latexmk-inherit-TeX-PDF-mode t))
+;; (use-package auctex-latexmk
+;;   :ensure t
+;;   :hook (LaTeX-mode . auctex-latexmk-setup)
+;;   :init
+;;   (setq auctex-latexmk-inherit-TeX-PDF-mode t))
 
 
 

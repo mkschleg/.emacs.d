@@ -22,17 +22,17 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
       '(("d" "Daily agenda and all TODOs"
          ((tags "PRIORITY=\"A\""
                 ((org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo 'done)
-						(org-agenda-skip-if nil '(scheduled))))
+						(org-agenda-skip-entry-if 'scheduled 'deadline)))
                  (org-agenda-overriding-header "High-priority unfinished tasks:")))
-	  (tags "REXP"
-		((org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo 'done)
-						(org-agenda-skip-if nil '(scheduled))))
-                 (org-agenda-overriding-header "Running Experiments:")))
-	  (tags "EXP"
-                ((org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo 'done)
-						(org-agenda-skip-if nil '(scheduled))))
-                 (org-agenda-overriding-header "Experiments:")))
-          (agenda "" ((org-agenda-ndays 1)))
+	  ;; (tags "REXP"
+	  ;;       ((org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo 'done)
+	  ;;       				(org-agenda-skip-if nil '(scheduled))))
+          ;;        (org-agenda-overriding-header "Running Experiments:")))
+	  ;; (tags "EXP"
+          ;;       ((org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo 'done)
+	  ;;       				(org-agenda-skip-if nil '(scheduled))))
+          ;;        (org-agenda-overriding-header "Experiments:")))
+          (agenda "" )
 	  (tags "PRIORITY=\"B\""
                 ((org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo 'done)
 						(org-agenda-skip-if nil '(scheduled))))

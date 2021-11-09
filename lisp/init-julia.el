@@ -18,14 +18,18 @@
   (org-babel-jupyter-override-src-block "julia"))
 
 (use-package eglot
-  :ensure t)
+  :ensure t
+  :bind (("M-m g g" . eglot)))
 
 (use-package eglot-jl
   :ensure t
   :config
   ;; (add-hook 'julia-mode-hook 'eglot)
   (setq eglot-connect-timeout 300)
-  (eglot-jl-init))
+  (eglot-jl-init)
+  (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia_1_4"))
+  (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia_1_5"))
+  (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia_1_6")))
 
 ;; (use-package lsp-mode
 ;;   :ensure t)
