@@ -16,7 +16,8 @@
   (org-default-notes-file (concat org-directory "/refile.org"))
   (org-highlight-latex-and-related '(latex script entities))
   (org-agenda-files (list "~/org/"
-                          "~/Documents/Research/notes/projects/"))
+                          ;; "~/Documents/Research/notes/projects/"
+                          "~/org/projects/"))
   (org-startup-folded nil)
   
   (org-agenda-tag-filter-preset (quote
@@ -107,7 +108,13 @@
            "* TODO %?\n %i\n %a")
           ("p" "Paper" entry
            (file+headline org-default-notes-file "Read List")
-           "* %^{TITLE}\n %i %u\n %i %^{LINK}\n")))
+           "* TODO %^{TITLE}\n %i %u\n %i %^{LINK}\n")
+          ("w" "Website" entry
+           (file+headline org-default-notes-file "Read List")
+           "* TODO %^{Topic}\n %i %u\n %i %^{LINK}\n")
+          ("v" "Video" entry
+           (file+headline org-default-notes-file "Watch List")
+           "* TODO %^{Topic}\n %i %u\n %i %^{LINK}\n")))
 
   ;; Export details
   (add-to-list 'org-latex-packages-alist '("" "fullpage" nil))
