@@ -24,12 +24,19 @@
 (use-package eglot-jl
   :ensure t
   :config
-  ;; (add-hook 'julia-mode-hook 'eglot)
   (setq eglot-connect-timeout 300)
   (eglot-jl-init)
   (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia_1_4"))
   (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia_1_5"))
   (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia_1_6")))
+
+(use-package vterm
+  :ensure t)
+
+(use-package julia-snail
+  :ensure t
+  :requires vterm
+  :hook (julia-mode . julia-snail-mode))
 
 ;; (use-package lsp-mode
 ;;   :ensure t)

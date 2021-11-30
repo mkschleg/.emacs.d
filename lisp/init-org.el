@@ -16,7 +16,7 @@
   (org-default-notes-file (concat org-directory "/refile.org"))
   (org-highlight-latex-and-related '(latex script entities))
   (org-agenda-files (list "~/org/"
-                          ;; "~/Documents/Research/notes/projects/"
+                          "~/org/plan/"
                           "~/org/projects/"))
   (org-startup-folded nil)
   
