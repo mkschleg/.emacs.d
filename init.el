@@ -43,7 +43,7 @@
 ;;;;;;;;
 ;; Mode configs
 ;;;;;;;;
-(require 'init-org)
+;; (require 'init-org)
 (require 'init-tex)
 (require 'init-julia)
 (require 'init-python)
