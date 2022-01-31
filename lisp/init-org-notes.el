@@ -59,7 +59,7 @@
 
 * References
 bibliographystyle:author-year
-bibliography:/Users/Matt/GD/bib/full_library.bib
+bibliography:/Users/Matt/org/bib/full_library.bib
 ")
          :unnarrowed t)))
 ;;           ("p" "paper" plain "%?" :if-new
@@ -161,14 +161,14 @@ bibliography:/Users/Matt/GD/bib/full_library.bib
 
 * References
 bibliographystyle:author-year
-bibliography:/Users/Matt/GD/bib/full_library.bib
+bibliography:/Users/Matt/org/bib/full_library.bib
 "
          :unnarrowed t)))
 
   (defun mattroot/ob-paper-file-name (title citekey)
     (downcase (replace-regexp-in-string "[,?.:;]" "" (s-replace-all '((" " . "_")) (concat citekey " " title)))))
 
-  (require 'org-ref-citeproc)
+  ;; (require 'org-ref-citeproc)
 
   (add-hook 'org-export-before-processing-hook 'mattroot/ob-export-preprocessor)
 

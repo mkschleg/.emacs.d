@@ -1,12 +1,29 @@
 
 ;; Name prefix for which key
 (root-leader
-    "j" '(:ignore t :which-key "jupyter"))
+  "j" '(:ignore t :which-key "jupyter"))
+
+(setq julia-default-exequtable "julia_1_6")
 
 (use-package julia-mode
   :ensure t
   :config
   (setq inferior-julia-program-name "julia")
+  (define-hostmode poly-julia-hostmode
+    :mode 'julia-mode)
+
+  (define-innermode poly-markdown-julia-comment-innermode
+    :mode 'markdown-mode
+    :head-matcher "[\s-]#=[\s-]MD"
+    :tail-matcher "[\s-]=#[\s]*"
+    :head-mode 'host
+    :tail-mode 'host
+    :keep-in-mode 'host
+    :fallback-mode 'host)
+
+  (define-polymode poly-julia-mode
+    :hostmode 'poly-julia-hostmode
+    :innermodes '(poly-markdown-julia-comment-innermode))
   )
 
 (use-package jupyter
@@ -30,13 +47,25 @@
   (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia_1_5"))
   (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia_1_6")))
 
-(use-package vterm
-  :ensure t)
-
-(use-package julia-snail
+(use-package lsp-julia
   :ensure t
-  :requires vterm
-  :hook (julia-mode . julia-snail-mode))
+  :custom
+  (lsp-julia-default-environment "~/.julia/environments/v1.6")
+  :config
+  (add-to-list 'safe-local-variable-values '(lsp-julia-command . "julia_1_6")))
+
+
+
+
+;; (use-package vterm
+;;   :ensure t)
+
+;; (use-package julia-snail
+;;   :ensure t
+;;   :requires vterm
+;;   :hook (julia-mode . julia-snail-mode)
+;;   :custom
+;;   (julia-snail-executable "julia_1_6"))
 
 ;; (use-package lsp-mode
 ;;   :ensure t)

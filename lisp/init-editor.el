@@ -126,4 +126,7 @@
 (use-package visual-fill-column
   :ensure t)
 
+(use-package poly-markdown
+  :ensure t)
+
 (provide 'init-editor)

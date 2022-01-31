@@ -1,5 +1,6 @@
 
 (use-package org
+  ;; :ensure org-contrib
   :functions
   org-renumber-environment
   mattroot/org-skip-subtree-if-habit
@@ -78,6 +79,7 @@
   (org-latex-logfiles-extensions (quote ("lof" "lot" "tex~" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl")))
   (mattroot/org-pub-dir "/Users/Matt/org/org-export-files")
   (org-latex-packages-alist '(("" "natbib" nil)))
+
   
   (org-default-priority ?D)
   (org-lowest-priority ?D)
@@ -98,6 +100,7 @@
 
   (require 'org-habit)
   (require 'org-habit-plus)
+  
 
   (setq org-capture-templates
         '(("t" "Create generic task" entry
@@ -139,8 +142,7 @@
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . t)
-     (python . t)
-     (jupyter . t)))
+     (python . t)))
 
   (setq indent-tabs-mode nil)
   (setq org-edit-src-content-indentation 0)
@@ -222,18 +224,31 @@
 
   )
 
-
 (use-package org-ref
   :ensure t
   :custom
-  (reftex-default-bibliography '("~/Google Drive/bib/full_library.bib"))
-  (org-ref-default-bibliography '("~/Google Drive/bib/full_library.bib"))
+  (bibtex-completion-bibliography '("~/org/bib/full_library.bib"))
+  (reftex-default-bibliography '("~/org/bib/full_library.bib"))
+  (org-ref-default-bibliography '("~/org/bib/full_library.bib"))
   :config
-  (org-ref-ivy-cite-completion))
+  (require 'org-ref-ivy)
 
-(use-package ox-hugo
+  (setq org-ref-insert-link-function 'org-ref-insert-link-hydra/body
+        org-ref-insert-cite-function 'org-ref-cite-insert-ivy
+        org-ref-insert-label-function 'org-ref-insert-label-link
+        org-ref-insert-ref-function 'org-ref-insert-ref-link
+        org-ref-cite-onclick-function (lambda (_) (org-ref-citation-hydra/body)))
+  (define-key org-mode-map (kbd "C-c ]") 'org-ref-insert-link))
+
+(use-package org-fragtog
   :ensure t
-  :after ox)
+  :after org
+  :config
+  ;; (add-hook 'org-mode-hook 'org-fragtog-mode)
+  )
+
+
+(require 'init-org-export)
 
 
 (provide 'init-org)

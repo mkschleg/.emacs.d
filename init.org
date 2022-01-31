@@ -1,0 +1,261 @@
+#+title: Emacs Config
+#+author: Matt Schlegel
+#+STARTUP: overview
+
+
+* Initial Setup and helpers
+
+** System specific settings
+When on macos (i.e. darwin) don't use the dired flag in ls as it isn't supported.
+#+begin_src emacs-lisp
+(when (string= system-type "darwin")       
+  (setq dired-use-ls-dired nil))
+#+end_src
+
+** Load Paths
+Add "lisp" directory to load-path. This enables the ability toe load files in this sub-folder. Eventually, all code in these files will be moved to the org config file (this file...).
+#+begin_src emacs-lisp
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+#+end_src
+
+#+begin_src emacs-lisp
+(setq load-prefer-newer t)
+#+end_src
+
+Potentially makes things snappier by doing garbage collection out of frame.
+#+begin_src emacs-lisp
+(add-hook 'focus-out-hook #'garbage-collect)
+#+end_src
+
+
+
+** Misc setup
+- turn off system bell
+- turn off backup-files
+- Set custom file
+- add function reload-config to reload ~.emacs~ file.
+#+begin_src emacs-lisp
+;;;;;;;;;
+;; Initialize config
+;;;;;;;;;
+
+(setq ring-bell-function 'ignore)
+(setq make-backup-files nil)
+
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file 'noerror)
+
+(defun reload-config ()
+  "Reload the config for emacs."
+  (interactive)
+  (load-file "~/.emacs"))
+#+end_src
+
+* Setup Package
+
+#+begin_src emacs-lisp
+(require 'package)
+#+end_src
+
+** Package sources
+Add package archives and set priorities
+- melpa pulls from master branch of git repos for packages
+- melpa-stable pulls from stable branches
+- gnu is the official gnu-elpa repository of packages.
+
+#+begin_src emacs-lisp
+(setq package-archives
+      `(("melpa-stable" . "https://stable.melpa.org/packages/")
+        ("melpa" . "https://melpa.org/packages/")
+        ("gnu"     . "https://elpa.gnu.org/packages/")
+        . ,package-archives))
+
+(setq package-archive-priorities
+      '(("melpa-stable" . 10)
+        ("gnu" . 5)
+        ("melpa" . 0)))
+#+end_src
+
+** initialize package
+Makes installed packages available, and refreshes contents if needed (i.e. on a fresh install).
+#+begin_src emacs-lisp
+(setq package-enable-at-startup nil)
+(package-initialize)
+(unless package-archive-contents (package-refresh-contents))
+#+end_src
+
+** [[https://github.com/jwiegley/use-package][use-package]]
+
+The use-package macro allows you to isolate package configuration in your .emacs file in a way that is both performance-oriented and, well, tidy. I created it because I have over 80 packages that I use in Emacs, and things were getting difficult to manage. Yet with this utility my total load time is around 2 seconds, with no loss of functionality!
+
+#+begin_src emacs-lisp
+(unless (package-installed-p 'use-package) (package-install 'use-package))
+(eval-when-compile (require 'use-package))
+#+end_src
+
+** [[https://github.com/quelpa/quelpa][quelpa]]
+
+quelpa is a tool to compile and install Emacs Lisp packages locally from local or remote source code.
+#+begin_src emacs-lisp
+(unless (package-installed-p 'quelpa) (package-install 'quelpa))
+(quelpa
+'(quelpa-use-package
+  :fetcher git
+  :url "https://framagit.org/steckerhalter/quelpa-use-package.git"))
+(eval-when-compile (require 'quelpa-use-package))
+#+end_src
+
+** [[https://github.com/emacscollective/auto-compile][auto-compile]]
+
+This package provides two minor modes which automatically recompile Emacs Lisp source files. Together these modes guarantee that Emacs never loads outdated byte code files.
+#+begin_src emacs-lisp
+(use-package auto-compile
+  :ensure
+  :hook ((after-init . auto-compile-on-load-mode)
+         (after-init . auto-compile-on-save-mode)))
+#+end_src
+
+* Useful misc packages/functions used in other configs
+** [[https://epkg.vercel.app/diminish][diminish]], [[https://github.com/tomterl/fullframe][fullframe]]
+
+- diminish: A diminished mode is a minor mode that has had its mode line display diminished, usually to nothing, although diminishing to a shorter word or a single letter is also supported.  This package implements diminished modes.
+- fullframe: This is a library that package developers can use to provide user friendly single window per frame execution of buffer exposing commands, as well as to use in personal emacs configurations to attain the same goal for packages that don’t use fullframe or the likes of it themselves.
+
+#+begin_src emacs-lisp         
+(use-package diminish :ensure)
+(use-package fullframe :ensure)
+#+end_src
+
+** [[https://github.com/magnars/s.el][s]]tring manipulation
+
+The long lost Emacs string manipulation library.
+#+begin_src emacs-lisp
+(use-package s
+  :ensure t
+  :demand t)
+#+end_src
+
+** [[https://github.com/tkf/emacs-request][request]], request-deferred -- an elisp HTTP library
+
+Uses curl as its backend or Emacs's native url.el library if curl is not found.
+#+begin_src emacs-lisp
+(use-package request
+  :ensure t
+  :demand t)
+
+(use-package request-deferred
+  :ensure t
+  :demand t)
+#+end_src
+
+* Keybind setup
+** [[https://github.com/emacsorphanage/god-mode][god-mode]]
+
+This is a global minor mode for entering Emacs commands without modifier keys. It's similar to Vim's separation of command mode and insert mode.
+
+#+begin_src emacs-lisp
+(use-package god-mode
+  :ensure t
+  :bind (("<escape>" . god-local-mode))
+  :config
+  ;; (defun my-god-mode-update-mode-line ()
+  ;;   (cond
+  ;;    (god-local-mode
+  ;;     (set-face-attribute 'mode-line nil
+  ;;                         :foreground "#604000"
+  ;;                         :background "#fff29a")
+  ;;     (set-face-attribute 'mode-line-inactive nil
+  ;;                         :foreground "#3f3000"
+  ;;                         :background "#fff3da"))
+  ;;    (t ;; back to default
+  ;;     (set-face-attribute 'mode-line nil
+  ;;       		  :foreground "#0a0a0a"
+  ;;       		  :background "#d7d7d7")
+  ;;     (set-face-attribute 'mode-line-inactive nil
+  ;;       		  :foreground "#404148"
+  ;;       		  :background "#efefef"))))
+
+  ;; (defun mattroot/god-mode-update-mode-line-enable ()
+  ;;   (set-face-attribute )
+
+  ;;   )
+    ;; (add-hook 'post-command-hook 'my-god-mode-update-mode-line))
+  )
+
+#+end_src
+
+** [[https://github.com/justbur/emacs-which-key][which-key]]
+
+#+begin_src emacs-lisp
+(use-package which-key
+  :ensure t
+  :config
+  (setq which-key-idle-delay 0.25)
+  (which-key-mode)
+  (which-key-enable-god-mode-support)
+  (diminish 'which-key-mode))
+#+end_src
+
+** [[https://github.com/noctuid/general.el#use-package-keywords][general]]
+
+#+begin_src emacs-lisp
+
+(use-package general
+  :ensure t
+  :demand t
+  :config
+  
+  ;; Reset some keys
+  (general-define-key
+   "M-m" nil)
+
+  ;; Some basic key defines
+  (general-define-key
+   "M-a" 'back-to-indentation)
+
+  (general-create-definer root-leader
+    :prefix "M-m")
+
+  (root-leader
+    ;; :prefix my-leader
+    ;; or without a variable
+    "" '(nil :which-key "Root Leader")
+    "c" '(:ignore t :which-key "comments"))
+
+  (root-leader
+    "cl" 'comment-line
+    "cd" 'comment-dwim
+    "cr" 'comment-or-uncomment-region))
+#+end_src
+
+* Other inits (still needing to be ported)
+
+#+begin_src emacs-lisp
+;;;;;;
+;; Core 
+;;;;;;
+
+;; (require 'init-package)
+;; (require 'init-funcs)
+;; (require 'init-keybinds)
+(require 'init-visuals)
+(require 'init-hydra)
+(require 'init-persp)
+(require 'init-ivy)
+(require 'init-editor)
+(require 'init-project)
+
+;;;;;;;;
+;; Mode configs
+;;;;;;;;
+(require 'init-org)
+(require 'init-tex)
+(require 'init-julia)
+(require 'init-python)
+
+
+;;;;;;;;
+;; Extras
+;;;;;;;;
+(require 'init-org-notes)
+#+end_src

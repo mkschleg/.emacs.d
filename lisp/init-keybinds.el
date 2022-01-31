@@ -40,19 +40,6 @@
   "cd" 'comment-dwim
   "cr" 'comment-or-uncomment-region)
 
-;;;;;
-;; ORG Mode
-;;;;;
-
-
-
-
-;;;;;
-;; helm
-;;;;;
-
-
-
 
 
 (provide 'init-keybinds)
