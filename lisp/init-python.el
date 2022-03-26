@@ -1,9 +1,9 @@
 
 
-;; (use-package elpy
-;;   :ensure t
-;;   :init
-;;   (elpy-enable))
+(use-package elpy
+  :ensure t
+  :init
+  (elpy-enable))
 
 ;; (use-package elpy
 ;;   :ensure t
@@ -34,5 +34,12 @@
   (setenv "WORKON_HOME" "~/.pyenv/shims/")
   (pyvenv-mode 1))
 
+(use-package pipenv
+  :ensure t
+  :hook (python-mode . pipenv-mode)
+  :init
+  (setq
+   pipenv-projectile-after-switch-function
+   #'pipenv-projectile-after-switch-extended))
 
 (provide 'init-python)

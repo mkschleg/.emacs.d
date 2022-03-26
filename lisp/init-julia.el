@@ -12,18 +12,21 @@
   (define-hostmode poly-julia-hostmode
     :mode 'julia-mode)
 
-  (define-innermode poly-markdown-julia-comment-innermode
-    :mode 'markdown-mode
-    :head-matcher "[\s-]#=[\s-]MD"
-    :tail-matcher "[\s-]=#[\s]*"
-    :head-mode 'host
-    :tail-mode 'host
-    :keep-in-mode 'host
-    :fallback-mode 'host)
+  ;; (font-lock-add-keywords 'julia-mode
+  ;;                         '(("\\")))
+  
+  ;; (define-innermode poly-markdown-julia-comment-innermode
+  ;;   :mode 'markdown-mode
+  ;;   :head-matcher "[\s-]#=[\s-]MD"
+  ;;   :tail-matcher "[\s-]=#[\s]*"
+  ;;   :head-mode 'host
+  ;;   :tail-mode 'host
+  ;;   :keep-in-mode 'host
+  ;;   :fallback-mode 'host)
 
-  (define-polymode poly-julia-mode
-    :hostmode 'poly-julia-hostmode
-    :innermodes '(poly-markdown-julia-comment-innermode))
+  ;; (define-polymode poly-julia-mode
+  ;;   :hostmode 'poly-julia-hostmode
+  ;;   :innermodes '(poly-markdown-julia-comment-innermode))
   )
 
 (use-package jupyter

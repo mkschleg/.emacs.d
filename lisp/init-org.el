@@ -100,7 +100,8 @@
 
   (require 'org-habit)
   (require 'org-habit-plus)
-  
+
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.5))
 
   (setq org-capture-templates
         '(("t" "Create generic task" entry
@@ -231,6 +232,7 @@
   (reftex-default-bibliography '("~/org/bib/full_library.bib"))
   (org-ref-default-bibliography '("~/org/bib/full_library.bib"))
   :config
+  
   (require 'org-ref-ivy)
 
   (setq org-ref-insert-link-function 'org-ref-insert-link-hydra/body
@@ -244,8 +246,14 @@
   :ensure t
   :after org
   :config
-  ;; (add-hook 'org-mode-hook 'org-fragtog-mode)
-  )
+  (add-hook 'org-mode-hook #'org-fragtog-mode))
+
+;;; requires pdf2svg
+(use-package org-inline-pdf
+  :ensure t
+  :after org
+  :config
+  (add-hook 'org-mode-hook #'org-inline-pdf-mode))
 
 
 (require 'init-org-export)
