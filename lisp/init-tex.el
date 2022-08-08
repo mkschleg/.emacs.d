@@ -53,5 +53,11 @@
   (setq auctex-latexmk-inherit-TeX-PDF-mode t))
 
 
+(use-package writeroom-mode
+  :ensure t)
+
+(root-leader
+  "w" 'writeroom-mode)
+
 
 (provide 'init-tex)

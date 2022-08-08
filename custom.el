@@ -20,15 +20,17 @@
      ("#F309DF" . 85)
      ("#3C3D37" . 100)))
  '(magit-diff-use-overlays nil)
+ '(org-agenda-files
+   '("/Users/Matt/org/archive.org" "/Users/Matt/org/daily.org" "/Users/Matt/org/dev.org" "/Users/Matt/org/habit.org" "/Users/Matt/org/hugo_setup.org" "/Users/Matt/org/meeting.org" "/Users/Matt/org/music.org" "/Users/Matt/org/notes.org" "/Users/Matt/org/questions.org" "/Users/Matt/org/refile.org" "/Users/Matt/org/teaching.org" "/Users/Matt/org/time-obligations.org" "/Users/Matt/org/todo.org" "/Users/Matt/org/toread.org" "/Users/Matt/org/writing.org" "/Users/Matt/org/plan/blog.org" "/Users/Matt/org/plan/ideas.org" "/Users/Matt/org/plan/organizing.org" "/Users/Matt/org/plan/pact.org" "/Users/Matt/org/plan/plan.org" "/Users/Matt/org/plan/projects.org" "/Users/Matt/org/projects/acnn.org" "/Users/Matt/org/projects/agentnns.org" "/Users/Matt/org/projects/arnn.org" "/Users/Matt/org/projects/causal-mbrl.org" "/Users/Matt/org/projects/causality.org" "/Users/Matt/org/projects/comp_gvfs.org" "/Users/Matt/org/projects/curiosity.org" "/Users/Matt/org/projects/discovery.org" "/Users/Matt/org/projects/gvfn.org" "/Users/Matt/org/projects/interview_study.org" "/Users/Matt/org/projects/juliarl.org" "/Users/Matt/org/projects/offpolicy.org" "/Users/Matt/org/projects/phd.org" "/Users/Matt/org/projects/pred_reps.org" "/Users/Matt/org/projects/predictive_coding.org" "/Users/Matt/org/projects/reproduce.org" "/Users/Matt/org/projects/sarah_forever.org" "/Users/Matt/org/projects/website.org") nil nil "Customized with use-package org")
  '(package-selected-packages
-   '(pipenv org-inline-pdf org-fragtog org-fragtog-mode ox-hugo org-contrib ox ivy-bibtex poly-markdown company flymake org-roam org-roam-bibtex lsp-julia eglot-jl eglot julia-snail vterm magit org-journal org visual-fill-column company-org-roam emacsql-sqlite emacsql super-save counsel-projectile request-deffered request-deferred json-rpc neotree
-            (eglot-jl :type git :host github :repo "non-Jedi/eglot-jl" :files
-                      ("*.el" "*.jl" "*.toml"))
-            (eglot-jl :type git :host github :repo "non-Jedi/eglot-jl" :files
-                      ("*.el" "*.jl" "*.toml"))
-            (eglot-jl :type git :host github :repo "non-Jedi/eglot-jl" :files
-                      ("*.el" "*.jl" "*.toml"))
-            flycheck yaml-mode elpy company-anaconda comapny-anaconda pyvenv conda anaconda-mode zotxt org-bullets lsp-mode rainbow-delimiters unfill ivy persp-mode refine s quelpa-use-package quelpa company-quickhelp ess ob-julia hl-todo yasnippet-snippets helm-lsp company-lsp lsp-ui jupyter julia-mode org-ref eyebrowse dimmer pdf-tools auctex-latexmk company-auctex latex-extra fullframe diminish auto-compile multiple-cursors spaceline smart-mode-line-powerline-theme powerline autopair yasnippet which-key undo-tree projectile nameless monokai-theme mmm-mode hydra helm-swoop god-mode general font-lock+ evil-unimpaired diff-hl dashboard counsel company-statistics company-math auctex aggressive-indent ace-window))
+   '(writeroom-mode writeroom pipenv org-inline-pdf org-fragtog org-fragtog-mode ox-hugo org-contrib ox ivy-bibtex poly-markdown company flymake org-roam org-roam-bibtex lsp-julia eglot-jl eglot julia-snail vterm magit org-journal org visual-fill-column company-org-roam emacsql-sqlite emacsql super-save counsel-projectile request-deffered request-deferred json-rpc neotree
+                    (eglot-jl :type git :host github :repo "non-Jedi/eglot-jl" :files
+                              ("*.el" "*.jl" "*.toml"))
+                    (eglot-jl :type git :host github :repo "non-Jedi/eglot-jl" :files
+                              ("*.el" "*.jl" "*.toml"))
+                    (eglot-jl :type git :host github :repo "non-Jedi/eglot-jl" :files
+                              ("*.el" "*.jl" "*.toml"))
+                    flycheck yaml-mode elpy company-anaconda comapny-anaconda pyvenv conda anaconda-mode zotxt org-bullets lsp-mode rainbow-delimiters unfill ivy persp-mode refine s quelpa-use-package quelpa company-quickhelp ess ob-julia hl-todo yasnippet-snippets helm-lsp company-lsp lsp-ui jupyter julia-mode org-ref eyebrowse dimmer pdf-tools auctex-latexmk company-auctex latex-extra fullframe diminish auto-compile multiple-cursors spaceline smart-mode-line-powerline-theme powerline autopair yasnippet which-key undo-tree projectile nameless monokai-theme mmm-mode hydra helm-swoop god-mode general font-lock+ evil-unimpaired diff-hl dashboard counsel company-statistics company-math auctex aggressive-indent ace-window))
  '(pos-tip-background-color "#FFFACE")
  '(pos-tip-foreground-color "#272822")
  '(safe-local-variable-values

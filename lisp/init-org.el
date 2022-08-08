@@ -18,7 +18,9 @@
   (org-highlight-latex-and-related '(latex script entities))
   (org-agenda-files (list "~/org/"
                           "~/org/plan/"
-                          "~/org/projects/"))
+                          "~/org/projects/"
+                          "~/Documents/Research/thesis/thesis/thesis.org"
+                          "~/Documents/Research/thesis/thesis/candidacy.org"))
   (org-startup-folded nil)
   
   (org-agenda-tag-filter-preset (quote
@@ -185,6 +187,8 @@
   :ensure t
   :hook (org-mode . (lambda () (org-bullets-mode 1))))
 
+
+(use-package org-inlinetask)
 
 ;;;;
 ;; zotxt
