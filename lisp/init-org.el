@@ -138,7 +138,6 @@
 
   
   (setq org-export-global-macros mattroot/org-macros)
-
   (global-unset-key (kbd "C-c ["))
   (global-set-key [remap org-set-tags-command] #'counsel-org-tag)
 
@@ -235,6 +234,18 @@
   (bibtex-completion-bibliography '("~/org/bib/full_library.bib"))
   (reftex-default-bibliography '("~/org/bib/full_library.bib"))
   (org-ref-default-bibliography '("~/org/bib/full_library.bib"))
+  :init
+  (with-eval-after-load 'ox
+    (defun my/org-ref-process-buffer--html (backend)
+      "Preprocess `org-ref' citations to HTML format.
+
+Do this only if the export backend is `html' or a derivative of
+that."
+      ;; `ox-hugo' is derived indirectly from `ox-html'.
+      ;; ox-hugo <- ox-blackfriday <- ox-md <- ox-html
+      (when (org-export-derived-backend-p backend 'html)
+        (org-ref-process-buffer 'html)))
+    (add-to-list 'org-export-before-parsing-hook #'my/org-ref-process-buffer--html))
   :config
   
   (require 'org-ref-ivy)
@@ -246,11 +257,11 @@
         org-ref-cite-onclick-function (lambda (_) (org-ref-citation-hydra/body)))
   (define-key org-mode-map (kbd "C-c ]") 'org-ref-insert-link))
 
-(use-package org-fragtog
-  :ensure t
-  :after org
-  :config
-  (add-hook 'org-mode-hook #'org-fragtog-mode))
+;; (use-package org-fragtog
+;;   :ensure t
+;;   :after org
+;;   :config
+;;   (add-hook 'org-mode-hook #'org-fragtog-mode))
 
 ;;; requires pdf2svg
 (use-package org-inline-pdf
