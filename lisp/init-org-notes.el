@@ -30,6 +30,8 @@
       (org-roam-db-autosync-mode)
       (require 'org-roam-protocol)
 
+      (setq org-ref-notes-function 'orb-org-ref-edit-note
+            org-ref-completion-library 'org-ref-ivy-bibtex)
       ;; find-file-wildcards
       ;; (setq org-id-extra-files (find-lisp-find-files org-roam-directory "\.org$"))
 
@@ -37,69 +39,31 @@
       (setq org-roam-capture-templates
         '(("d" "default" plain "%?" :target
            (file+head "${slug}.org"
-                       "#+SETUPFILE:../hugo_setup.org
+                       "#+SETUPFILE:../org-support-files/hugo_setup.org
 #+HUGO_SECTION: braindump
 #+HUGO_SLUG: ${slug}
 #+hugo_custom_front_matter: :notetype note
 #+TITLE: ${title}
-#+include: ../../org-support-files/variables.org\n")
+#+include: ../org-support-files/variables.org\n")
            :unnarrowed t)
-          ("r" "ref" plain "%?" :if-new
+          ("r" "ref" plain "%?" :target
            (file+head "%(mattroot/ob-paper-file-name \"${title}\" \"${citekey}\").org"
-                     "#+SETUPFILE:../hugo_setup.org
+                     "#+SETUPFILE:../org-support-files/hugo_setup.org
 #+HUGO_SECTION: braindump
-#+HUGO_SLUG: ${slug}
+#+HUGO_SLUG: ${citekey}
 #+hugo_custom_front_matter: :notetype paper
-#+ZOTERO: 
+#+include: ../org-support-files/variables.org
 #+TITLE: ${citekey}: ${title}
-#+include: ../../org-support-files/variables.org
-#+ROAM_KEY: ${ref}\n\n- tags :: \n- source :: ${url}\n- authors :: ${author-or-editor}\n- year :: ${year}
 
+- tags :: \n- source :: ${url}\n- authors :: ${author-or-editor}\n- year :: ${year}
 
 
 * References
 bibliographystyle:author-year
 bibliography:/Users/Matt/org/bib/full_library.bib
 ")
-         :unnarrowed t)))
-;;           ("p" "paper" plain "%?" :if-new
-;;            (:file+head "papers/${slug}.org"
-;;                        "#+SETUPFILE:../hugo_setup.org
-;; #+HUGO_SECTION: braindump
-;; #+HUGO_SLUG: ${slug}
-;; #+hugo_custom_front_matter: :notetype paper
-;; #+TITLE: ${title}
-;; #+include: ../../org-support-files/variables.org\n")
-;;            :unnarrowed t)))
-;;           ("w" "website" plain (function org-roam--capture-get-point)
-;;            "%?"
-;;            :file-name "website/${slug}"
-;;            :head "#+SETUPFILE:../hugo_setup.org
-;; #+HUGO_SECTION: braindump
-;; #+HUGO_SLUG: ${slug}
-;; #+hugo_custom_front_matter: :notetype website
-;; #+TITLE: ${title}
-;; #+include: ../../org-support-files/variables.org\n"
-;;            :unnarrowed t)
-;;           ("t" "topics" plain (function org-roam--capture-get-point)
-;;            "%?"
-;;            :file-name "${slug}"
-;;            :head "#+SETUPFILE:./hugo_setup.org
-;; #+HUGO_SECTION: braindump
-;; #+HUGO_SLUG: ${slug}
-;; #+hugo_custom_front_matter: :notetype topic
-;; #+TITLE: ${title}\n"
-;;            :unnarrowed t)
-;;           ("b" "books" plain (function org-roam--capture-get-point)
-;;            "%?"
-;;            :file-name "book/${slug}"
-;;            :head "#+SETUPFILE:./hugo_setup.org
-;; #+HUGO_SECTION: braindump
-;; #+HUGO_SLUG: ${slug}
-;; #+hugo_custom_front_matter: :notetype book
-;; #+TITLE: ${title}\n"
-;;            :unnarrowed t)))
-      
+           :unnarrowed t)))
+
       (defun mattroot/org-roam--backlinks-list-with-content (file)
         (with-temp-buffer
           (if-let* ((backlinks (org-roam--get-backlinks file))
@@ -134,41 +98,36 @@ bibliography:/Users/Matt/org/bib/full_library.bib
         (interactive)
         (org-id-update-id-locations (org-roam--list-files org-roam-directory)))
 
-      (add-hook 'org-export-before-processing-hook 'mattroot/org-export-preprocessor))
+      (add-hook 'org-export-before-processing-hook 'mattroot/org-export-preprocessor)
+
+      (defun mattroot/force-org-rebuild-cache ()
+        "Rebuild the `org-mode' and `org-roam' cache."
+        (interactive)
+        (org-id-update-id-locations)
+        ;; Note: you may need `org-roam-db-clear-all'
+        ;; followed by `org-roam-db-sync'
+        (org-roam-db-sync)
+        (org-roam-update-org-id-locations))
+
+      )
+
+(defun mattroot/ob-paper-file-name (title citekey)
+  (downcase (replace-regexp-in-string "[,?.:;]" "" (s-replace-all '((" " . "_")) (concat citekey " " title)))))
 
 (use-package org-roam-bibtex
   :ensure t
+  :after org-roam
   :hook (org-mode . org-roam-bibtex-mode)
   :bind (("M-m n p" . orb-note-actions))
   :config
-
+  (require 'org-ref)
   (setq orb-preformat-keywords
-        '(("citekey" . "=key=") "title" "url" "file" "author-or-editor" "keywords" "year"))
-  
-  (setq orb-templates
-      '(("r" "ref" plain (function org-roam-capture--get-point) "%?"
-         :file-name "%(mattroot/ob-paper-file-name \"${title}\" \"${citekey}\")"
-         :head "#+SETUPFILE:../hugo_setup.org
-#+HUGO_SECTION: braindump
-#+HUGO_SLUG: ${slug}
-#+hugo_custom_front_matter: :notetype paper
-#+ZOTERO: 
-#+TITLE: ${citekey}: ${title}
-#+include: ../../org-support-files/variables.org
-#+ROAM_KEY: ${ref}\n\n- tags :: \n- source :: ${url}\n- authors :: ${author-or-editor}\n- year :: ${year}
+        '("citekey" "title" "url" "author-or-editor" "keywords" "file" "year")
+        orb-process-file-keyword t
+        orb-file-field-extensions '("pdf")
+        orb-note-actions-interface 'ivy
+        orb-insert-interface 'ivy-bibtex)
 
-
-
-* References
-bibliographystyle:author-year
-bibliography:/Users/Matt/org/bib/full_library.bib
-"
-         :unnarrowed t)))
-
-  (defun mattroot/ob-paper-file-name (title citekey)
-    (downcase (replace-regexp-in-string "[,?.:;]" "" (s-replace-all '((" " . "_")) (concat citekey " " title)))))
-
-  ;; (require 'org-ref-citeproc)
 
   (add-hook 'org-export-before-processing-hook 'mattroot/ob-export-preprocessor)
 
@@ -204,6 +163,182 @@ bibliography:/Users/Matt/org/bib/full_library.bib
        (set-buffer (find-file-noselect file))
        (ignore-errors (org-hugo-export-wim-to-md)))
      (directory-files-recursively org-roam-directory "\\.org$"))))
+
+
+
+;; (defun mattroot/ob-export-preprocessor (&optional backend)
+;;     "Format citations and bibliography for BACKEND.
+;; Warning.  Destructive to your document! Will replace links.
+;; Meant to be used in export on a temporary version of the
+;; documents."
+
+;;     ;; Get the style from bibliographystyle link
+;;     ;; and eliminate bibliography style links
+;;     ;; This will load all style modules
+;;     (cl-loop for link in (org-element-map
+;;                              (org-element-parse-buffer) 'link 'identity)
+;;              if (string= "bibliographystyle"
+;;                          (org-element-property :type link))
+;;              do
+;;              ;; get path for style and load it
+;;              (load-library (org-element-property :path link))
+;;              ;; get rid of the link in the buffer
+;;              (setf (buffer-substring (org-element-property :begin link)
+;;                                      (org-element-property :end link))
+;;                    ""))
+
+;;     (orcp-collect-citations)
+;;     (orcp-collect-unique-entries)
+
+;;     (let ((link-replacements (cl-loop for link in *orcp-citation-links*
+;;                                       for repl in (orcp-get-citation-replacements)
+;;                                       collect
+;;                                       (list repl
+;;                                             (org-element-property :begin link)
+;;                                             (org-element-property :end link)
+;;                                             (org-element-property :path link))))
+;;           (bibliography-string (orcp-formatted-bibliography))
+;;           punctuation
+;;           trailing-space
+;;           bibliography-link)
+
+;;       ;; replace citation links
+;;       (cl-loop for (repl start end ref) in (reverse link-replacements)
+;;                for link in (reverse *orcp-citation-links*)
+;;                do
+;;                ;; chomp leading spaces if needed
+;;                (when (orcp-get-citation-style
+;;                       'chomp-leading-space
+;;                       (intern (org-element-property :type link)))
+;;                  (goto-char start)
+;;                  (while (and (not (sentence-beginning-p))
+;;                              (looking-back " " (- (point) 2)))
+;;                    (delete-char -1)
+;;                    (setq start (- start 1))
+;;                    (setq end (- end 1))))
+
+;;                ;; chomp trailing spaces if needed
+;;                (when (orcp-get-citation-style
+;;                       'chomp-trailing-space
+;;                       (intern (org-element-property :type link)))
+;;                  (goto-char end)
+;;                  (while (looking-back " " (- (point) 2))
+;;                    (delete-char 1)))
+
+;;                ;; Check for transposing punctuation
+;;                (setq punctuation nil)
+;;                (when (orcp-get-citation-style
+;;                       'transpose-punctuation
+;;                       (intern (org-element-property :type link)))
+;;                  ;; goto end of link
+;;                  (goto-char end)
+;;                  (when (looking-at "\\.\\|,\\|;")
+;;                    (setq punctuation (buffer-substring end (+ 1 end)))
+;;                    (delete-char 1)))
+
+;;                ;; preserve trailing space
+;;                (goto-char end)
+;;                (setq trailing-space (if (looking-back " " (line-beginning-position)) " " ""))
+
+;;                (let* ((completions (org-roam--get-ref-path-completions))
+;;                       (pair (assoc ref completions))
+;;                       (file (if pair
+;;                                 (cdr pair)
+;;                               nil))
+;;                       (link (mattroot/ob-get-ref-link-insert (cadr file) repl)))
+;;                  (setf (buffer-substring start end) (concat link trailing-space)))
+
+
+;;                (when punctuation
+;;                  (goto-char start)
+;;                  ;; I can't figure out why this is necessary. I would have thought
+;;                  ;; the chomp leading spaces would get it.
+;;                  (when (thing-at-point 'whitespace)
+;;                    (delete-char -1))
+;;                  (insert punctuation)))
+
+;;       ;; Insert bibliography section at the bibliography link
+;;       (setq bibliography-link (cl-loop for link
+;;                                        in (org-element-map
+;;                                               (org-element-parse-buffer)
+;;                                               'link 'identity)
+;;                                        if (string= "bibliography"
+;;                                                    (org-element-property :type link))
+;;                                        collect link))
+;;       (pcase (length bibliography-link)
+;;         ((pred (< 1)) (error "Only one bibliography link allowed"))
+;;         ((pred (= 1))
+;;          ;; replace bibliography link
+;;          (setq bibliography-link (car bibliography-link))
+;;          (setf (buffer-substring (org-element-property :begin bibliography-link)
+;;                                  (oerg-element-property :end bibliography-link))
+;;                bibliography-string))
+;;         ((pred (= 0))
+;;          ;; no bibliography link in document
+;;          (when link-replacements
+;;            (message "Warning: No bibliography link found although there are citations to process")))))
+
+
+
+  ;; (setq orb-preformat-keywords
+  ;;       '(("citekey" . "=key=") "title" "url" "file" "author-or-editor" "keywords" "year"))
+  
+;; ;;   (setq orb-templates
+;; ;;       '(("r" "ref" plain (function org-roam-capture--get-point) "%?"
+;; ;;          :file-name "%(mattroot/ob-paper-file-name \"${title}\" \"${citekey}\")"
+;; ;;          :head "#+SETUPFILE:../hugo_setup.org
+;; ;; #+HUGO_SECTION: braindump
+;; ;; #+HUGO_SLUG: ${slug}
+;; ;; #+hugo_custom_front_matter: :notetype paper
+;; ;; #+ZOTERO: 
+;; ;; #+TITLE: ${citekey}: ${title}
+;; ;; #+include: ../../org-support-files/variables.org
+;; ;; #+ROAM_KEY: ${ref}\n\n- tags :: \n- source :: ${url}\n- authors :: ${author-or-editor}\n- year :: ${year}
+
+
+
+;; ;; * References
+;; ;; bibliographystyle:author-year
+;; ;; bibliography:/Users/Matt/org/bib/full_library.bib
+;; ;; "
+;; ;;          :unnarrowed t)))
+
+;;   ;; (require 'org-ref-citeproc)
+
+;;   (add-hook 'org-export-before-processing-hook 'mattroot/ob-export-preprocessor)
+
+
+;;   (require 'zotxt)
+;;   (require 'deferred)
+;;   (require 'request)
+;;   (require 'f)
+
+;;   (defun org-roam--open-zotero-attachment-from-id (id &optional arg)
+;;     (lexical-let ((item-id id)
+;;                   (arg arg))
+;;       (message item-id)
+;;       (deferred:$
+;;         (request-deferred
+;;          (format "%s/items" zotxt-url-base)
+;;          :params `(("key" . ,item-id) ("format" . "paths"))
+;;          :parser 'json-read)
+;;         (deferred:nextc it
+;;           (lambda (response)
+;;             (let ((paths (cdr (assq 'paths (elt (request-response-data response) 0)))))
+;;               (find-file-other-window (org-zotxt-choose-path paths) arg))))
+;;         (if zotxt--debug-sync (deferred:sync! it)))))
+
+;;   (defun org-roam-bibtex-open-zotero-pdf ()
+;;     (interactive)
+;;     (org-roam--open-zotero-attachment-from-id (mattroot/org-kwd "ZOTERO")))
+
+;;   (defun org-roam-ox-hugo-export-zettle ()
+;;     (interactive)
+;;     (mapc
+;;      (lambda (file)
+;;        (set-buffer (find-file-noselect file))
+;;        (ignore-errors (org-hugo-export-wim-to-md)))
+;;      (directory-files-recursively org-roam-directory "\\.org$"))))
 
 
 

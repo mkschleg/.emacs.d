@@ -33,6 +33,10 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 	  ;;       				(org-agenda-skip-if nil '(scheduled))))
           ;;        (org-agenda-overriding-header "Experiments:")))
           (agenda "" )
+          (tags "TODO=\"waiting\""
+                ((org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo 'done)
+						(org-agenda-skip-if nil '(scheduled))))
+                 (org-agenda-overriding-header "Waiting:")))
 	  (tags "PRIORITY=\"B\""
                 ((org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo 'done)
 						(org-agenda-skip-if nil '(scheduled))))
