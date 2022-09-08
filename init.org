@@ -266,6 +266,7 @@ This is a global minor mode for entering Emacs commands without modifier keys. I
 (use-package spaceline
   :ensure t
   :config
+  (require 'spaceline-config)
   (setq powerline-image-apple-rgb t)
   (spaceline-spacemacs-theme))
 
@@ -449,7 +450,7 @@ Change empty line to tilde (from spacemacs).
 
 ** Eyebrowse
 #+begin_src emacs-lisp
-(use-package eyebrowse :demand t
+(use-package eyebrowse :demand t :ensure t
   :init
   ;; (setq eyebrowse-keymap-prefix (kbd "M-m e"))
   (global-unset-key (kbd "C-c C-w"))
@@ -680,22 +681,26 @@ FRAME defaults to the current frame."
 
 (show-paren-mode 1)
 
-(use-package autopair
-  :ensure t
-  :diminish autopair-mode
-  :config
-  (autopair-global-mode)
-  )
+;; (use-package autopair
+;;   :ensure t
+;;   :diminish autopair-mode
+;;   :config
+;;   (autopair-global-mode)
+;;   )
 
 (use-package rainbow-delimiters
   :diminish rainbow-delimiters-mode
   :ensure t
   :hook (prog-mode . (lambda () (rainbow-delimiters-mode))))
 
+
 (use-package flyspell
   :ensure t
   :diminish flyspell-mode
   :hook (text-mode . (lambda () (flyspell-mode 1))))
+
+
+  
 
 (use-package company
   :ensure t
@@ -745,7 +750,7 @@ FRAME defaults to the current frame."
   :commands (lsp lsp-deffered))
 
 (use-package lsp-ui :ensure t :commands lsp-ui-mode)
-(use-package company-lsp :ensure t :commands company-lsp)
+;; (use-package company-lsp :ensure t :commands company-lsp)
 (use-package helm-lsp :ensure t :commands helm-lsp-workspace-symbol)
 
 ;; (diminish 'eldoc-mode)
@@ -811,12 +816,12 @@ FRAME defaults to the current frame."
 ;;;;;;;;
 ;; Extras
 ;;;;;;;;
-(require 'init-org-notes)
+;; (require 'init-org-notes)
 #+end_src
 
 
 * SQL Databases:
 
-#+begin_src emacs-lisp
-(require 'sql_db)
-#+end_src
+# #+begin_src emacs-lisp
+# (require 'sql_db)
+# #+end_src

@@ -162,6 +162,7 @@
 
 
 (use-package org-journal
+  :ensure t
   :bind (("M-m d n" . 'org-journal-new-entry))
   :custom
   (org-journal-dir "~/org/journal")
@@ -229,9 +230,19 @@
 
   )
 
+
+
+
+
 (use-package org-ref
   :ensure t
   :custom
+  (bibtex-completion-display-formats
+	'((article       . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${journal:40}")
+	  (inbook        . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} Chapter ${chapter:32}")
+	  (incollection  . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
+	  (inproceedings . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
+	  (t             . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*}")))
   (bibtex-completion-bibliography '("~/org/bib/full_library.bib"))
   (reftex-default-bibliography '("~/org/bib/full_library.bib"))
   (org-ref-default-bibliography '("~/org/bib/full_library.bib"))
@@ -246,11 +257,12 @@
         org-ref-cite-onclick-function (lambda (_) (org-ref-citation-hydra/body)))
   (define-key org-mode-map (kbd "C-c ]") 'org-ref-insert-link))
 
-(use-package org-fragtog
-  :ensure t
-  :after org
-  :config
-  (add-hook 'org-mode-hook #'org-fragtog-mode))
+
+;; (use-package org-fragtog
+;;   :ensure t
+;;   :after org
+;;   :config
+;;   (add-hook 'org-mode-hook #'org-fragtog-mode))
 
 ;;; requires pdf2svg
 (use-package org-inline-pdf
