@@ -11,7 +11,8 @@
   :hook ((org-mode . (lambda () (visual-line-mode 1)))
          (org-mode . visual-fill-column-mode)
          (org-mode . (lambda () (setq visual-fill-column-center-text t)))
-         (org-mode . (lambda () (setq fill-column 150))))
+         (org-mode . (lambda () (setq fill-column 150)))
+         (org-mode . org-indent-mode))
   :custom
   (org-directory "~/org/")
   (org-default-notes-file (concat org-directory "/refile.org"))
@@ -141,14 +142,15 @@
   (global-unset-key (kbd "C-c ["))
   (global-set-key [remap org-set-tags-command] #'counsel-org-tag)
 
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((emacs-lisp . t)
-     (python . t)))
 
   (setq indent-tabs-mode nil)
   (setq org-edit-src-content-indentation 0)
   (setq org-src-preserve-indentation t)
+
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (python . t)))
 
   (require 'init-org-agenda)
   (require 'init-org-equations)
@@ -231,8 +233,6 @@
 
 
 
-
-
 (use-package org-ref
   :ensure t
   :custom
@@ -284,6 +284,6 @@ that."
 
 
 (require 'init-org-export)
-
+(require 'init-org-babel)
 
 (provide 'init-org)

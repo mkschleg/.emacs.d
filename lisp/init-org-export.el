@@ -39,7 +39,21 @@
                  ("\\subsection{%s}" . "\\subsection*{%s}")
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
                  ("\\mboxparagraph{%s}" . "\\mboxparagraph*{%s}")
-                 ("\\mboxsubparagraph{%s}" . "\\mboxsubparagraph*{%s}"))))
+                 ("\\mboxsubparagraph{%s}" . "\\mboxsubparagraph*{%s}")))
+
+    (add-to-list 'org-latex-classes
+               '("note"
+                 "
+\\documentclass[11pt]{article}          % for default format
+\\include{~/org/org-support-files/variables.tex}
+"
+                 ("\\chapter{%s}" . "\\chapter*{%s}")
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\mboxparagraph{%s}" . "\\mboxparagraph*{%s}")
+                 ("\\mboxsubparagraph{%s}" . "\\mboxsubparagraph*{%s}")))
+  )
 
 (setq mattroot/temp-variable
       `("1"

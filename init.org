@@ -814,7 +814,7 @@ FRAME defaults to the current frame."
 ;;;;;;;;
 ;; Extras
 ;;;;;;;;
-;; (require 'init-org-notes)
+(require 'init-org-notes)
 #+end_src
 
 

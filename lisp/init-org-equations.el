@@ -9,41 +9,60 @@
 ;; specify the justification you want
 (plist-put org-format-latex-options :justify 'center)
 
-(defun org-justify-fragment-overlay (beg end image imagetype)
-  "Adjust the justification of a LaTeX fragment.
-The justification is set by :justify in
-`org-format-latex-options'. Only equations at the beginning of a
-line are justified."
-  (cond
-   ;; Centered justification
-   ((and (eq 'center (plist-get org-format-latex-options :justify)) 
-         (= beg (line-beginning-position)))
-    (let* ((img (create-image image 'imagemagick t))
-           (width (car (image-size img)))
-           (offset (floor (- (/ (window-text-width) 2) (/ width 2)))))
-      (overlay-put (ov-at) 'before-string (make-string offset ? ))))
-   ;; Right justification
-   ((and (eq 'right (plist-get org-format-latex-options :justify)) 
-         (= beg (line-beginning-position)))
-    (let* ((img (create-image image 'imagemagick t))
-           (width (car (image-display-size (overlay-get (ov-at) 'display))))
-           (offset (floor (- (window-text-width) width (- (line-end-position) end)))))
-      (overlay-put (ov-at) 'before-string (make-string offset ? ))))))
+(defun scimax-org-latex-fragment-justify (justification)
+  "Justify the latex fragment at point with JUSTIFICATION.
+JUSTIFICATION is a symbol for 'left, 'center or 'right."
+  (interactive
+   (list (intern-soft
+          (completing-read "Justification (left): " '(left center right)
+                           nil t nil nil 'left))))
+  (let* ((ov (ov-at))
+	 (beg (ov-beg ov))
+	 (end (ov-end ov))
+	 (shift (- beg (line-beginning-position)))
+	 (img (overlay-get ov 'display))
+	 (img (and (and img (consp img) (eq (car img) 'image)
+			(image-type-available-p (plist-get (cdr img) :type)))
+		   img))
+	 space-left offset)
+    (when (and img
+	       ;; This means the equation is at the start of the line
+	       (= beg (line-beginning-position))
+	       (or
+		(string= "" (s-trim (buffer-substring end (line-end-position))))
+		(eq 'latex-environment (car (org-element-context)))))
+      (setq space-left (- (window-max-chars-per-line) (car (image-size img)))
+	    offset (floor (cond
+			   ((eq justification 'center)
+			    (- (/ space-left 2) shift))
+			   ((eq justification 'right)
+			    (- space-left shift))
+			   (t
+			    0))))
+      (when (>= offset 0)
+	(overlay-put ov 'before-string (make-string offset ?\ ))))))
 
-(defun org-latex-fragment-tooltip (beg end image imagetype)
-  "Add the fragment tooltip to the overlay and set click function to toggle it."
-  (overlay-put (ov-at) 'help-echo
-               (concat (buffer-substring beg end)
-                       "mouse-1 to toggle."))
-  (overlay-put (ov-at) 'local-map (let ((map (make-sparse-keymap)))
-                                    (define-key map [mouse-1]
-                                      `(lambda ()
-                                         (interactive)
-                                         (org-remove-latex-fragment-image-overlays ,beg ,end)))
-                                    map)))
+(defun scimax-org-latex-fragment-justify-advice (beg end image imagetype)
+  "After advice function to justify fragments."
+  (message "Justify Latex Fragment")
+  (scimax-org-latex-fragment-justify (or (plist-get org-format-latex-options :justify) 'left)))
+
+
+(defun scimax-toggle-latex-fragment-justification ()
+  "Toggle if LaTeX fragment justification options can be used."
+  (interactive)
+  (if (not (get 'scimax-org-latex-fragment-justify-advice 'enabled))
+      (progn
+	(advice-add 'org--format-latex-make-overlay :after 'scimax-org-latex-fragment-justify-advice)
+	(put 'scimax-org-latex-fragment-justify-advice 'enabled t)
+	(message "Latex fragment justification enabled"))
+    (advice-remove 'org--format-latex-make-overlay 'scimax-org-latex-fragment-justify-advice)
+    (put 'scimax-org-latex-fragment-justify-advice 'enabled nil)
+    (message "Latex fragment justification disabled")))
 
 ;; advise the function to a
-(advice-add 'org--format-latex-make-overlay :after 'org-justify-fragment-overlay)
-(advice-add 'org--format-latex-make-overlay :after 'org-latex-fragment-tooltip)
+;; (advice-add 'org--format-latex-make-overlay :after 'org-justify-fragment-overlay)
+;; (advice-add 'org--format-latex-make-overlay :after 'org-latex-fragment-tooltip)
+
 
 (provide 'init-org-equations)
