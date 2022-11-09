@@ -10,11 +10,14 @@
   "n" '(:ignore t :which-key "notes")
   "nr" 'org-ref-ivy-insert-cite-link)
 
+(use-package emacsql-sqlite3
+  :ensure t)
+
 (use-package org-roam
       ;; :hook 
-      ;; (after-init . org-roam-mode)
       :custom
       (org-roam-directory "~/org/notes")
+      (org-roam-database-connector 'sqlite3)
       ;; (org-roam-index-file "index.org")
       ;; (org-roam-link-title-format "%s")
       :custom-face
