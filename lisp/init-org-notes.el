@@ -8,7 +8,8 @@
 
 (root-leader
   "n" '(:ignore t :which-key "notes")
-  "nr" 'org-ref-ivy-insert-cite-link)
+  "nc" 'org-ref-ivy-insert-cite-link
+  "nr" 'org-ref-insert-ref-link)
 
 (use-package org-roam
       ;; :hook 
@@ -63,7 +64,7 @@
 
 * References
 bibliographystyle:author-year
-bibliography:/Users/Matt/org/bib/full_library.bib
+bibliography:/Users/Matt/GD/bib/full_library.bib
 ")
            :unnarrowed t)))
 

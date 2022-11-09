@@ -1,4 +1,6 @@
 
+
+
 (use-package org
   ;; :ensure org-contrib
   :functions
@@ -16,7 +18,7 @@
   :custom
   (org-directory "~/org/")
   (org-default-notes-file (concat org-directory "/refile.org"))
-  (org-highlight-latex-and-related '(latex script entities))
+  (org-highlight-latex-and-related '(native script entities))
   (org-agenda-files (list "~/org/"
                           "~/org/plan/"
                           "~/org/projects/"
@@ -101,6 +103,12 @@
   
   :config
 
+  (require 'org-src)
+
+  (add-to-list 'org-src-block-faces '("latex" (:inherit default :extend t)))
+  ;; (add-hook 'org-mode-hook (lambda ()
+  ;;              (font-lock-add-keywords nil tex-font-lock-keywords-3)))
+
   (require 'org-habit)
   (require 'org-habit-plus)
 
@@ -147,10 +155,10 @@
   (setq org-edit-src-content-indentation 0)
   (setq org-src-preserve-indentation t)
 
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((emacs-lisp . t)
-     (python . t)))
+  ;; (org-babel-do-load-languages
+  ;;  'org-babel-load-languages
+  ;;  '((emacs-lisp . t)
+  ;;    (python . t)))
 
   (require 'init-org-agenda)
   (require 'init-org-equations)
@@ -242,9 +250,9 @@
 	  (incollection  . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
 	  (inproceedings . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
 	  (t             . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*}")))
-  (bibtex-completion-bibliography '("~/org/bib/full_library.bib"))
-  (reftex-default-bibliography '("~/org/bib/full_library.bib"))
-  (org-ref-default-bibliography '("~/org/bib/full_library.bib"))
+  (bibtex-completion-bibliography '("~/GD/bib/full_library.bib"))
+  (reftex-default-bibliography '("~/GD/bib/full_library.bib"))
+  (org-ref-default-bibliography '("~/GD/bib/full_library.bib"))
   :init
   (with-eval-after-load 'ox
     (defun my/org-ref-process-buffer--html (backend)
@@ -276,11 +284,11 @@ that."
 ;;   (add-hook 'org-mode-hook #'org-fragtog-mode))
 
 ;;; requires pdf2svg
-(use-package org-inline-pdf
-  :ensure t
-  :after org
-  :config
-  (add-hook 'org-mode-hook #'org-inline-pdf-mode))
+;; (use-package org-inline-pdf
+;;   :ensure t
+;;   :after org
+;;   :config
+;;   (add-hook 'org-mode-hook #'org-inline-pdf-mode))
 
 
 (require 'init-org-export)

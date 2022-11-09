@@ -58,6 +58,15 @@
   (add-to-list 'safe-local-variable-values '(lsp-julia-command . "julia_1_6")))
 
 
+(use-package vterm
+  :ensure t)
+;; Now run `M-x vterm` and make sure it works!
+
+(use-package julia-snail
+  :ensure t
+  :hook (julia-mode . julia-snail-mode)
+  :custom
+  (julia-snail-executable "julia-1.8"))
 
 
 ;; (use-package vterm
