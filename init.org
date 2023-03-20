@@ -266,7 +266,7 @@ This is a global minor mode for entering Emacs commands without modifier keys. I
   :config
   (require 'spaceline-config)
   (setq powerline-image-apple-rgb t)
-  (spaceline-spacemacs-theme))
+  (spaceline-emacs-theme))
 
 ;; (use-package powerline
 ;;   :ensure t

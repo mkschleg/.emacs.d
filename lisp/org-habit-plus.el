@@ -62,7 +62,7 @@
 
 
 (eval-when-compile
-  (require 'cl))
+  (require 'cl-lib))
 
 (defgroup org-habit nil
   "Options concerning habit tracking in Org-mode."
@@ -201,7 +201,7 @@ It will be green even if it was done after the deadline."
                   This list represents a \"habit\" for the rest of this module."
   (save-excursion
     (if pom (goto-char pom))
-    (assert (org-is-habit-p (point)))
+    (cl-assert (org-is-habit-p (point)))
     (let* ((scheduled (org-get-scheduled-time (point)))
            (scheduled-repeat (org-get-repeat))
            (end (org-entry-end-position))

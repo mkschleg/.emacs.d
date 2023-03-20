@@ -37,6 +37,7 @@
   (org-babel-jupyter-override-src-block "python")
   (org-babel-jupyter-override-src-block "julia"))
 
+
 (use-package eglot
   :ensure t
   :bind (("M-m g g" . eglot)))
@@ -46,27 +47,30 @@
   :config
   (setq eglot-connect-timeout 300)
   (eglot-jl-init)
-  (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia_1_4"))
-  (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia_1_5"))
-  (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia_1_6")))
+  (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia-1.4"))
+  (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia-1.5"))
+  (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia-1.6"))
+  (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia-1.7"))
+  (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia-1.8"))
+  (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia-1.9")))
 
-(use-package lsp-julia
-  :ensure t
-  :custom
-  (lsp-julia-default-environment "~/.julia/environments/v1.6")
-  :config
-  (add-to-list 'safe-local-variable-values '(lsp-julia-command . "julia_1_6")))
+;; (use-package lsp-julia
+;;   :ensure t
+;;   :custom
+;;   (lsp-julia-default-environment "~/.julia/environments/v1.6")
+;;   :config
+;;   (add-to-list 'safe-local-variable-values '(lsp-julia-command . "julia_1_6")))
 
 
 (use-package vterm
   :ensure t)
 ;; Now run `M-x vterm` and make sure it works!
 
-(use-package julia-snail
-  :ensure t
-  :hook (julia-mode . julia-snail-mode)
-  :custom
-  (julia-snail-executable "julia-1.8"))
+;; (use-package julia-snail
+;;   :ensure t
+;;   :hook (julia-mode . julia-snail-mode)
+;;   :custom
+;;   (julia-snail-executable "julia-1.8"))
 
 
 ;; (use-package vterm

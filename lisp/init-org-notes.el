@@ -14,13 +14,15 @@
 (use-package emacsql-sqlite3
   :ensure t)
 
+
+
+;; Org-roam hugo export is handled by .dir-locals.el setting "org-hugo-auto-export-mode"
+
 (use-package org-roam
-      ;; :hook 
       :custom
       (org-roam-directory "~/org/notes")
       (org-roam-database-connector 'sqlite3)
-      ;; (org-roam-index-file "index.org")
-      ;; (org-roam-link-title-format "%s")
+
       :custom-face
       (org-roam-link ((t (:inherit org-link :foreground "#9c8321"))))
       :bind (("M-m n l" . org-roam-buffer)
@@ -36,6 +38,7 @@
 
       (setq org-ref-notes-function 'orb-org-ref-edit-note
             org-ref-completion-library 'org-ref-ivy-bibtex)
+
       ;; find-file-wildcards
       ;; (setq org-id-extra-files (find-lisp-find-files org-roam-directory "\.org$"))
 
@@ -67,7 +70,7 @@
 
 * References
 bibliographystyle:author-year
-bibliography:/Users/Matt/GD/bib/full_library.bib
+bibliography:/Users/Matt/org/bib/full_library.bib
 ")
            :unnarrowed t)))
 
@@ -225,6 +228,20 @@ selected even if `org-zotxt-default-search-method' is non-nil"
   (company-org-roam :fetcher github :repo "jethrokuan/company-org-roam")
   :config
   (push 'company-org-roam company-backends))
+
+(use-package org-roam-ui
+  ;; :straight
+  ;;   (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
+  :after org-roam
+;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
+;;         a hookable mode anymore, you're advised to pick something yourself
+;;         if you don't care about startup time, use
+;;  :hook (after-init . org-roam-ui-mode)
+  :config
+  (setq org-roam-ui-sync-theme t
+        org-roam-ui-follow t
+        org-roam-ui-update-on-save t))
+        ;; org-roam-ui-open-on-start t))
 
 
 (provide 'init-org-notes)

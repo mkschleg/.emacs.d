@@ -250,9 +250,9 @@
 	  (incollection  . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
 	  (inproceedings . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
 	  (t             . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*}")))
-  (bibtex-completion-bibliography '("~/GD/bib/full_library.bib"))
-  (reftex-default-bibliography '("~/GD/bib/full_library.bib"))
-  (org-ref-default-bibliography '("~/GD/bib/full_library.bib"))
+  (bibtex-completion-bibliography '("~/org/bib/full_library.bib"))
+  (reftex-default-bibliography '("~/org/bib/full_library.bib"))
+  (org-ref-default-bibliography '("~/org/bib/full_library.bib"))
   :init
   (with-eval-after-load 'ox
     (defun my/org-ref-process-buffer--html (backend)
