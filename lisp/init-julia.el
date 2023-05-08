@@ -73,41 +73,5 @@
 ;;   (julia-snail-executable "julia-1.8"))
 
 
-;; (use-package vterm
-;;   :ensure t)
-
-;; (use-package julia-snail
-;;   :ensure t
-;;   :requires vterm
-;;   :hook (julia-mode . julia-snail-mode)
-;;   :custom
-;;   (julia-snail-executable "julia_1_6"))
-
-;; (use-package lsp-mode
-;;   :ensure t)
-
-;; (use-package lsp-julia
-;;   :quelpa (lsp-julia :fetcher github :repo "non-Jedi/lsp-julia"))
-
-;; (use-package ob-julia
-;;   :quelpa
-;;   (ob-julia :fetcher github :repo "gjkerns/ob-julia.git")
-;;   :custom
-;;   (org-babel-julia-command "julia -e 'include(\"$(ENV[\"HOME\"])/.julia/config/startup_babel.jl\")' -i")
-;;   :config
-;;   (org-babel-do-load-languages
-;;    'org-babel-load-languages
-;;    '((dot . t) (julia . t) (python . t)))
-;;   (setq org-confirm-babel-evaluate nil))
-
-;; (use-package ess
-;;   :ensure t
-;;   :init (require 'ess-site)
-;;   :config
-;;   (setq inferior-julia-args "")
-;;   (setq ess-use-eldoc t)
-;;   (setq ess-use-auto-complete t)
-;;   (setq ess-tab-complete-in-script t))
-
 
 (provide 'init-julia)
