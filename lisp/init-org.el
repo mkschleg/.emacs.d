@@ -18,12 +18,14 @@
   :custom
   (org-directory "~/org/")
   (org-default-notes-file (concat org-directory "/refile.org"))
+  (org-notes-inbox-file (concat org-directory "/notes/inbox.org"))
   (org-highlight-latex-and-related '(native script entities))
   (org-agenda-files (list "~/org/"
                           "~/org/plan/"
                           "~/org/projects/"
-                          "~/Documents/Research/thesis/thesis/thesis.org"
-                          "~/Documents/Research/thesis/thesis/candidacy.org"))
+                          ;; "~/org/notes/study_plan.org"
+                          "~/org/notes/current_learning_objectives.org"
+                          "~/Documents/Research/thesis/thesis/thesis.org"))
   (org-startup-folded nil)
   
   (org-agenda-tag-filter-preset (quote
@@ -118,18 +120,21 @@
         '(("t" "Create generic task" entry
            (file+headline org-default-notes-file "Tasks")
            "* TODO %?\n %u\n %i")
-          ("i" "Create a inline Task" entry
+          ("i" "Create a inline task" entry
            (file+headline org-default-notes-file "Tasks")
            "* TODO %?\n %i\n %a")
+          ("n" "Create a note task" entry
+           (file+headline org-notes-inbox-file "Tasks")
+           "* TODO %?\n %i\n %a")
           ("p" "Paper" entry
-           (file+headline org-default-notes-file "Read List")
-           "* TODO %^{TITLE}\n %i %u\n %i %^{LINK}\n")
+           (file+headline org-notes-inbox-file "Tasks")
+           "* TODO %^{TITLE} :PAPER: \n %i %u\n %i %^{LINK}\n")
           ("w" "Website" entry
-           (file+headline org-default-notes-file "Read List")
-           "* TODO %^{Topic}\n %i %u\n %i %^{LINK}\n")
+           (file+headline org-notes-inbox-file "Tasks")
+           "* TODO %^{Topic} :WEBSITE: \n %i %u\n %i %^{LINK}\n")
           ("v" "Video" entry
-           (file+headline org-default-notes-file "Watch List")
-           "* TODO %^{Topic}\n %i %u\n %i %^{LINK}\n")))
+           (file+headline org-notes-inbox-file "Tasks")
+           "* TODO %^{Topic} :VIDEO: \n %i %u\n %i %^{LINK}\n")))
 
   ;; Export details
   (add-to-list 'org-latex-packages-alist '("" "fullpage" nil))

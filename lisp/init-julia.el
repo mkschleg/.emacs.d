@@ -47,12 +47,13 @@
   :config
   (setq eglot-connect-timeout 300)
   (eglot-jl-init)
-  (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia-1.4"))
-  (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia-1.5"))
-  (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia-1.6"))
-  (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia-1.7"))
-  (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia-1.8"))
-  (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia-1.9")))
+  ;; (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia-1.4"))
+  ;; (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia-1.5"))
+  ;; (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia-1.6"))
+  ;; (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia-1.7"))
+  ;; (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia-1.8"))
+  ;; (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia-1.9"))
+  )
 
 ;; (use-package lsp-julia
 ;;   :ensure t

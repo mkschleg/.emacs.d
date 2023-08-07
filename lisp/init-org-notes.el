@@ -11,9 +11,8 @@
   "nc" 'org-ref-ivy-insert-cite-link
   "nr" 'org-ref-insert-ref-link)
 
-(use-package emacsql-sqlite3
+(use-package emacsql-sqlite
   :ensure t)
-
 
 
 ;; Org-roam hugo export is handled by .dir-locals.el setting "org-hugo-auto-export-mode"
@@ -21,7 +20,7 @@
 (use-package org-roam
       :custom
       (org-roam-directory "~/org/notes")
-      (org-roam-database-connector 'sqlite3)
+      (org-roam-database-connector 'sqlite)
 
       :custom-face
       (org-roam-link ((t (:inherit org-link :foreground "#9c8321"))))
@@ -55,7 +54,35 @@
 #+include: ../org-support-files/variables.md
 #+TITLE: ${title}\n")
            :unnarrowed t)
-          ("r" "ref" plain "%?" :target
+          ("r" "research-topic" plain "%?" :target
+           (file+head "${slug}.org"
+                       "#+SETUPFILE:../org-support-files/hugo_setup.org
+#+LaTeX_CLASS: note
+#+HUGO_SECTION: braindump
+#+HUGO_SLUG: ${slug}
+#+hugo_custom_front_matter: :notetype research-topic
+#+latex_header: \\input{../org-support-files/variables.tex}
+#+include: ../org-support-files/variables.md
+#+TITLE: ${title}\n\n\n
+* Projects\n
+* Questions\n
+* Literature\n")
+           :unnarrowed t)
+          ("m" "misc-topic" plain "%?" :target
+           (file+head "${slug}.org"
+                       "#+SETUPFILE:../org-support-files/hugo_setup.org
+#+LaTeX_CLASS: note
+#+HUGO_SECTION: braindump
+#+HUGO_SLUG: ${slug}
+#+hugo_custom_front_matter: :notetype misc-topic
+#+latex_header: \\input{../org-support-files/variables.tex}
+#+include: ../org-support-files/variables.md
+#+TITLE: ${title}\n\n\n
+* Projects\n
+* Questions\n
+* Literature\n")
+           :unnarrowed t)
+          ("c" "citation" plain "%?" :target
            (file+head "%(mattroot/ob-paper-file-name \"${title}\" \"${citekey}\").org"
                      "#+SETUPFILE:../org-support-files/hugo_setup.org
 #+HUGO_SECTION: braindump

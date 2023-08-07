@@ -41,11 +41,44 @@
                  ("\\mboxparagraph{%s}" . "\\mboxparagraph*{%s}")
                  ("\\mboxsubparagraph{%s}" . "\\mboxsubparagraph*{%s}")))
 
-    (add-to-list 'org-latex-classes
+  (add-to-list 'org-latex-classes
                '("note"
                  "
 \\documentclass[11pt]{article}          % for default format
 \\include{~/org/org-support-files/variables.tex}
+"
+                 ("\\chapter{%s}" . "\\chapter*{%s}")
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\mboxparagraph{%s}" . "\\mboxparagraph*{%s}")
+                 ("\\mboxsubparagraph{%s}" . "\\mboxsubparagraph*{%s}")))
+  (add-to-list 'org-latex-classes
+               '("statement"
+                 "
+\\documentclass[11pt]{article}
+\\usepackage[utf8]{inputenc}
+\\usepackage[T1]{fontenc}
+
+\\usepackage[hidelinks]{hyperref}
+\\usepackage{fullpage}
+\\usepackage[
+    backend=biber,
+    style=numeric,
+    url=false,
+    isbn=false
+]
+{biblatex}
+\\addbibresource{/Users/Matt/org/bib/full_library.bib}
+\\usepackage{fancyhdr}
+\\fancyhead[L]{Matthew Schlegel}
+\\fancyhead[R]{\\today}
+\\renewcommand{\\headrulewidth}{0.4pt}
+\\setlength{\\headheight}{14pt}
+
+\\pagestyle{fancy}
+[NO-DEFAULT-PACKAGES]
+[NO-PACKAGES]
 "
                  ("\\chapter{%s}" . "\\chapter*{%s}")
                  ("\\section{%s}" . "\\section*{%s}")
