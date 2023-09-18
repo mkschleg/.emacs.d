@@ -27,7 +27,8 @@
                           "~/org/projects/"
                           ;; "~/org/notes/study_plan.org"
                           "~/org/notes/current_learning_objectives.org"
-                          "~/Documents/Research/thesis/thesis/thesis.org"))
+                          ;; "~/Documents/Research/thesis/thesis/thesis.org"
+                          ))
   (org-startup-folded nil)
   
   (org-agenda-tag-filter-preset (quote
