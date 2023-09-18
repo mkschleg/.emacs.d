@@ -6,7 +6,7 @@
 (setq julia-default-exequtable "julia_1_6")
 
 (use-package julia-mode
-  :ensure t
+  :straight t
   :config
   (setq inferior-julia-program-name "julia")
   (define-hostmode poly-julia-hostmode
@@ -30,7 +30,7 @@
   )
 
 (use-package jupyter
-  :ensure t
+  :straight t
   :bind (("M-m j r" . jupyter-run-repl)
 	 ("M-m j c" . jupyter-connect-repl))
   :config
@@ -39,24 +39,24 @@
 
 
 (use-package eglot
-  :ensure t
+  :straight t
   :bind (("M-m g g" . eglot)))
 
 (use-package eglot-jl
-  :ensure t
+  :straight t
   :config
   (setq eglot-connect-timeout 300)
   (eglot-jl-init)
-  ;; (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia-1.4"))
-  ;; (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia-1.5"))
-  ;; (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia-1.6"))
-  ;; (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia-1.7"))
-  ;; (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia-1.8"))
-  ;; (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia-1.9"))
+  (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia-1.4"))
+  (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia-1.5"))
+  (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia-1.6"))
+  (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia-1.7"))
+  (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia-1.8"))
+  (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia-1.9"))
   )
 
 ;; (use-package lsp-julia
-;;   :ensure t
+;;   :straight t
 ;;   :custom
 ;;   (lsp-julia-default-environment "~/.julia/environments/v1.6")
 ;;   :config
@@ -64,11 +64,11 @@
 
 
 (use-package vterm
-  :ensure t)
+  :straight t)
 ;; Now run `M-x vterm` and make sure it works!
 
 ;; (use-package julia-snail
-;;   :ensure t
+;;   :straight t
 ;;   :hook (julia-mode . julia-snail-mode)
 ;;   :custom
 ;;   (julia-snail-executable "julia-1.8"))

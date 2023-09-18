@@ -1,13 +1,13 @@
 
 
 (use-package pdf-tools
-  :ensure t
+  :straight t
   :config
   (pdf-loader-install))
 
 
 (use-package tex
-  :ensure auctex
+  :straight auctex
   :defer
   :defines TeX-view-program-list TeX-view-program-selection
   :init
@@ -28,7 +28,7 @@
   (add-hook 'LaTeX-mode-hook 'turn-off-auto-fill))
 
 (use-package reftex
-  :ensure t
+  :straight t
   :diminish reftex-mode
   :hook (LaTeX-mode . turn-on-reftex)
   :init
@@ -36,25 +36,25 @@
         reftex-ref-style-default-list '("Cleveref" "Varioref" "Default")))
 
 (use-package latex-extra
-  :ensure t
+  :straight t
   :diminish latex-extra-mode
   :hook (LaTeX-mode . latex-extra-mode)
   :config
   (remove-hook 'latex-extra-mode-hook 'latex/setup-auto-fill))
 
 (use-package company-auctex
-  :ensure t
+  :straight t
   :hook (TeX-mode . company-auctex-init))
 
 (use-package auctex-latexmk
-  :ensure t
+  :straight t
   :hook (LaTeX-mode . auctex-latexmk-setup)
   :init
   (setq auctex-latexmk-inherit-TeX-PDF-mode t))
 
 
 (use-package writeroom-mode
-  :ensure t)
+  :straight t)
 
 (root-leader
   "w" 'writeroom-mode)

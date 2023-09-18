@@ -53,8 +53,11 @@ Potentially makes things snappier by doing garbage collection out of frame.
 
 * Setup Package
 
+
+We are moving to a straight.el way of downloading packages.
+
 #+begin_src emacs-lisp
-(require 'package)
+;; (require 'package)
 #+end_src
 
 ** Package sources
@@ -64,50 +67,83 @@ Add package archives and set priorities
 - gnu is the official gnu-elpa repository of packages.
 
 #+begin_src emacs-lisp
-(setq package-archives
-      `(("melpa" . "https://melpa.org/packages/")
-        ("gnu"     . "https://elpa.gnu.org/packages/")))
+;; (setq package-archives
+;;       `(("melpa" . "https://melpa.org/packages/")
+;;         ("gnu"     . "https://elpa.gnu.org/packages/")))
 
-(setq package-archive-priorities
-      '(("gnu" . 5)
-        ("melpa" . 0)))
+;; (setq package-archive-priorities
+;;       '(("gnu" . 5)
+;;         ("melpa" . 0)))
 #+end_src
 
 ** initialize package
 Makes installed packages available, and refreshes contents if needed (i.e. on a fresh install).
 #+begin_src emacs-lisp
-(setq package-enable-at-startup nil)
-(package-initialize)
-(unless package-archive-contents (package-refresh-contents))
+;; (setq package-enable-at-startup nil)
+;; (package-initialize)
+;; (unless package-archive-contents (package-refresh-contents))
 #+end_src
+
+** [[https://github.com/radian-software/straight.el][straight]]
+
+I'm taking this configuration from [[https://systemcrafters.net/advanced-package-management/using-straight-el/][this blog]].
+
+First we need to download the bootstrap file and load it.
+
+#+begin_src emacs-lisp
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 6))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+#+end_src
+
+
+After this we need to integrate straight into use-package.
+
+#+begin_src emacs-lisp
+;; (setq straight-use-package-by-default t)
+#+end_src
+
 
 ** [[https://github.com/jwiegley/use-package][use-package]]
 
 The use-package macro allows you to isolate package configuration in your .emacs file in a way that is both performance-oriented and, well, tidy. I created it because I have over 80 packages that I use in Emacs, and things were getting difficult to manage. Yet with this utility my total load time is around 2 seconds, with no loss of functionality!
 
 #+begin_src emacs-lisp
-(unless (package-installed-p 'use-package) (package-install 'use-package))
-(eval-when-compile (require 'use-package))
+(straight-use-package 'use-package)
+(use-package straight
+  :custom
+  (straight-use-package-by-default t))
+;; (unless (package-installed-p 'use-package) (package-install 'use-package))
+;; (eval-when-compile (require 'use-package))
+;; (straight-use-package 'org)
 #+end_src
 
 ** [[https://github.com/quelpa/quelpa][quelpa]]
 
-quelpa is a tool to compile and install Emacs Lisp packages locally from local or remote source code.
-#+begin_src emacs-lisp
-(unless (package-installed-p 'quelpa) (package-install 'quelpa))
-(quelpa
-'(quelpa-use-package
-  :fetcher git
-  :url "https://framagit.org/steckerhalter/quelpa-use-package.git"))
-(eval-when-compile (require 'quelpa-use-package))
-#+end_src
+# quelpa is a tool to compile and install Emacs Lisp packages locally from local or remote source code.
+# #+begin_src emacs-lisp
+# (unless (package-installed-p 'quelpa) (package-install 'quelpa))
+# (quelpa
+# '(quelpa-use-package
+#   :fetcher git
+#   :url "https://framagit.org/steckerhalter/quelpa-use-package.git"))
+# (eval-when-compile (require 'quelpa-use-package))
+# #+end_src
 
 ** [[https://github.com/emacscollective/auto-compile][auto-compile]]
 
 This package provides two minor modes which automatically recompile Emacs Lisp source files. Together these modes guarantee that Emacs never loads outdated byte code files.
 #+begin_src emacs-lisp
 (use-package auto-compile
-  :ensure
   :hook ((after-init . auto-compile-on-load-mode)
          (after-init . auto-compile-on-save-mode)))
 #+end_src
@@ -119,8 +155,8 @@ This package provides two minor modes which automatically recompile Emacs Lisp s
 - fullframe: This is a library that package developers can use to provide user friendly single window per frame execution of buffer exposing commands, as well as to use in personal emacs configurations to attain the same goal for packages that don’t use fullframe or the likes of it themselves.
 
 #+begin_src emacs-lisp         
-(use-package diminish :ensure)
-(use-package fullframe :ensure)
+(use-package diminish :straight t)
+(use-package fullframe :straight t)
 #+end_src
 
 ** [[https://github.com/magnars/s.el][s]]tring manipulation
@@ -128,7 +164,7 @@ This package provides two minor modes which automatically recompile Emacs Lisp s
 The long lost Emacs string manipulation library.
 #+begin_src emacs-lisp
 (use-package s
-  :ensure t
+  :straight t
   :demand t)
 #+end_src
 
@@ -137,14 +173,28 @@ The long lost Emacs string manipulation library.
 Uses curl as its backend or Emacs's native url.el library if curl is not found.
 #+begin_src emacs-lisp
 (use-package request
-  :ensure t
+  :straight t
   :demand t)
 
 (use-package request-deferred
-  :ensure t
+  :straight t
   :demand t)
 #+end_src
 
+** mapcar*
+
+#+begin_src emacs-lisp
+(defun mapcar* (function &rest args)
+  "Apply FUNCTION to successive cars of all ARGS.
+Return the list of results."
+  ;; If no list is exhausted,
+  (if (not (memq nil args))
+      ;; apply function to CARs.
+      (cons (apply function (mapcar #'car args))
+            (apply #'mapcar* function
+                   ;; Recurse for rest of elements.
+                   (mapcar #'cdr args)))))
+#+end_src
 * Keybind setup
 ** [[https://github.com/emacsorphanage/god-mode][god-mode]]
 
@@ -152,7 +202,7 @@ This is a global minor mode for entering Emacs commands without modifier keys. I
 
 #+begin_src emacs-lisp
 (use-package god-mode
-  :ensure t
+  :straight t
   :bind (("<escape>" . god-local-mode))
   :config
   ;; (defun my-god-mode-update-mode-line ()
@@ -185,7 +235,7 @@ This is a global minor mode for entering Emacs commands without modifier keys. I
 
 #+begin_src emacs-lisp
 (use-package which-key
-  :ensure t
+  :straight t
   :config
   (setq which-key-idle-delay 0.25)
   (which-key-mode)
@@ -198,8 +248,7 @@ This is a global minor mode for entering Emacs commands without modifier keys. I
 #+begin_src emacs-lisp
 
 (use-package general
-  :ensure t
-  :demand t
+  :straight t
   :config
   
   ;; Reset some keys
@@ -253,7 +302,7 @@ This is a global minor mode for entering Emacs commands without modifier keys. I
 
 #+begin_src emacs-lisp
 (use-package monokai-theme
-  :ensure t
+  :straight t
   :config
   (load-theme 'monokai t))
 #+end_src
@@ -262,14 +311,14 @@ This is a global minor mode for entering Emacs commands without modifier keys. I
 
 #+begin_src emacs-lisp
 (use-package spaceline
-  :ensure t
+  :straight t
   :config
   (require 'spaceline-config)
   (setq powerline-image-apple-rgb t)
   (spaceline-emacs-theme))
 
 ;; (use-package powerline
-;;   :ensure t
+;;   :straight t
 ;;   :config
 ;;   (setq powerline-image-apple-rgb t)
 ;;   (powerline-default-theme))
@@ -279,7 +328,7 @@ This is a global minor mode for entering Emacs commands without modifier keys. I
 
 #+begin_src emacs-lisp
 (use-package dimmer
-  :ensure t
+  :straight t
   :config
   (dimmer-mode))
 #+end_src
@@ -302,7 +351,7 @@ Change empty line to tilde (from spacemacs).
 ** setup
 #+begin_src emacs-lisp
 (use-package hydra
-  :ensure t
+  :straight t
   :functions
   mattroot/hydra-prepare-dynamic-names-helper
   mattroot/hydra-prepare-dynamic-names
@@ -310,7 +359,7 @@ Change empty line to tilde (from spacemacs).
   :defines mattroot/hydra-dynamic-selectors
   :config
   (setq mattroot/hydra-dynamic-selectors
-        "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+        (mapcar 'identity "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"))
 
   (defun mattroot/hydra-prepare-dynamic-names-helper (a b)
     (if (string= b highlight-name)
@@ -337,7 +386,7 @@ Change empty line to tilde (from spacemacs).
 	       " | "))
 
   (defun mattroot/hydra-prepare-dynamic-heads (keys names func)
-    (mapcar* (lambda (a b)
+  (mapcar* (lambda (a b)
 	       (list (char-to-string a)
 		     `(funcall ',func ',b)))
            keys names)))
@@ -356,13 +405,13 @@ Change empty line to tilde (from spacemacs).
 
 #+begin_src emacs-lisp
 (use-package refine
-  :ensure t)
+  :straight t)
 #+end_src
 
 ** Persp-mode
 #+begin_src emacs-lisp  
 (use-package persp-mode
-  :ensure t
+  :straight t
   :hook ((after-init . persp-mode)
          (emacs-startup . toggle-frame-maximized))
   :defines ivy-sort-functions-alist
@@ -448,7 +497,7 @@ Change empty line to tilde (from spacemacs).
 
 ** Eyebrowse
 #+begin_src emacs-lisp
-(use-package eyebrowse :demand t :ensure t
+(use-package eyebrowse :demand t :straight t
   :init
   ;; (setq eyebrowse-keymap-prefix (kbd "M-m e"))
   (global-unset-key (kbd "C-c C-w"))
@@ -492,7 +541,7 @@ Change empty line to tilde (from spacemacs).
   	  (nth 1 split-tag)
   	(car split-tag))))
 
-  (mattroot/hydra-prepare-dynamic-names (mapconcat 'identity (mattroot/eyebrowse--get-slots) "")
+  (mattroot/hydra-prepare-dynamic-names (mapcar 'string-to-char (mattroot/eyebrowse--get-slots))
 					(mattroot/eyebrowse--get-tags)
 					(mattroot/eyebrowse--get-current-tag))
 
@@ -504,7 +553,7 @@ Change empty line to tilde (from spacemacs).
 		   (eval `(defhydra mattroot/hydra-eyebrowse (:color blue :hint nil)
 			    (concat
 			     "Current Slots: "
-			     (mattroot/hydra-prepare-dynamic-names (mapconcat 'identity (mattroot/eyebrowse--get-slots) "")
+			     (mattroot/hydra-prepare-dynamic-names (mapcar 'string-to-char (mattroot/eyebrowse--get-slots))
 								   (mattroot/eyebrowse--get-tags)
 								   (mattroot/eyebrowse--get-current-tag))
 			     "
@@ -638,15 +687,18 @@ FRAME defaults to the current frame."
 
 #+begin_src emacs-lisp
 (use-package ivy
-  :ensure t
+  :straight t
   :config
   (ivy-mode 1)
   (setq ivy-use-virtual-buffers t)
   (setq enable-recursive-minibuffers t)
   (setq ivy-use-selectable-prompt t))
 
+(use-package ivy-bibtex
+  :straight t)
+
 (use-package counsel
-  :ensure t
+  :straight t
   :bind (("M-x" . counsel-M-x)
 	 ("C-s" . swiper)
 	 ("C-x C-r" . counsel-recentf)
@@ -670,7 +722,7 @@ FRAME defaults to the current frame."
 (setq indent-tabs-mode nil)
 
 (use-package unfill
-  :ensure
+  :straight t
   :bind ("M-m u" . unfill-paragraph))
 
 ;;;
@@ -680,7 +732,7 @@ FRAME defaults to the current frame."
 (show-paren-mode 1)
 
 ;; (use-package autopair
-;;   :ensure t
+;;   :straight t
 ;;   :diminish autopair-mode
 ;;   :config
 ;;   (autopair-global-mode)
@@ -688,12 +740,12 @@ FRAME defaults to the current frame."
 
 (use-package rainbow-delimiters
   :diminish rainbow-delimiters-mode
-  :ensure t
+  :straight t
   :hook (prog-mode . (lambda () (rainbow-delimiters-mode))))
 
 
 (use-package flyspell
-  :ensure t
+  :straight t
   :diminish flyspell-mode
   :hook (text-mode . (lambda () (flyspell-mode 1))))
 
@@ -701,22 +753,22 @@ FRAME defaults to the current frame."
   
 
 (use-package company
-  :ensure t
+  :straight t
   :config
   (global-company-mode))
 
 (use-package company-quickhelp
-  :ensure t
+  :straight t
   :config
   (eval-after-load 'company
     '(define-key company-active-map (kbd "C-c h") #'company-quickhelp-manual-begin)))
 
 (use-package hl-line
-  :ensure t
+  :straight t
   :hook (prog-mode . hl-line-mode))
 
 (use-package multiple-cursors
-  :ensure t
+  :straight t
   :bind (("C->" . mc/mark-next-like-this)
 	 ("C-<" . mc/mark-previous-like-this)
 	 ("C-c C-<" . mc/mark-all-like-this)
@@ -727,34 +779,34 @@ FRAME defaults to the current frame."
   :config (fullframe ibuffer ibuffer-quit))
 
 (use-package magit
-  :ensure t
+  :straight t
   :bind (("C-x g" . magit-status)))
 
 (use-package undo-tree
-  :ensure t
+  :straight t
   :bind (("C-/" . undo)
 	 ("C-?" . redo))
   :config
   (global-undo-tree-mode 1))
 
 (use-package yasnippet
-  :ensure t)
+  :straight t)
 
 (use-package yasnippet-snippets
-  :ensure t)
+  :straight t)
 
 (use-package lsp-mode
-  :ensure t
+  :straight t
   :commands (lsp lsp-deffered))
 
-(use-package lsp-ui :ensure t :commands lsp-ui-mode)
-;; (use-package company-lsp :ensure t :commands company-lsp)
-(use-package helm-lsp :ensure t :commands helm-lsp-workspace-symbol)
+(use-package lsp-ui :straight t :commands lsp-ui-mode)
+;; (use-package company-lsp :straight t :commands company-lsp)
+(use-package helm-lsp :straight t :commands helm-lsp-workspace-symbol)
 
 ;; (diminish 'eldoc-mode)
 
 (use-package hl-todo
-  :ensure t
+  :straight t
   :config
   (add-hook 'prog-mode-hook 'hl-todo-mode))
 
@@ -763,13 +815,13 @@ FRAME defaults to the current frame."
   ;; (add-hook 'LaTeX-mode-hook 'visual-line-mode)
 
 (use-package yaml-mode
-  :ensure t)
+  :straight t)
 
 (root-leader
   "t" "neotree")
 
 (use-package neotree
-  :ensure t
+  :straight t
   :bind (("M-m t" . neotree))
   :config (setq neo-smart-open t))
 
@@ -777,10 +829,10 @@ FRAME defaults to the current frame."
 (setq js-indent-level 2)
 
 (use-package visual-fill-column
-  :ensure t)
+  :straight t)
 
 (use-package poly-markdown
-  :ensure t)
+  :straight t)
 #+end_src
 
 * Project

@@ -1,6 +1,7 @@
 
 
 (use-package ox
+  :straight nil
   :after org
   :config
   (require 'ox-extra)
@@ -8,7 +9,7 @@
   )
 
 (use-package ox-hugo
-  :ensure t
+  :straight t
   :after ox
   :config
 )
@@ -16,7 +17,7 @@
   ;; (ox-extras-activate '(ignore-headlines)))
 
 (use-package ox-latex
-  :demand t
+  :straight nil
   :after ox
   :config
 

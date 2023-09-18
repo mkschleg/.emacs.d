@@ -12,7 +12,7 @@
   "nr" 'org-ref-insert-ref-link)
 
 (use-package emacsql-sqlite
-  :ensure t)
+  :straight t)
 
 
 ;; Org-roam hugo export is handled by .dir-locals.el setting "org-hugo-auto-export-mode"
@@ -152,7 +152,7 @@ bibliography:/Users/Matt/org/bib/full_library.bib
   (downcase (replace-regexp-in-string "[,?.:;]" "" (s-replace-all '((" " . "_")) (concat citekey " " title)))))
 
 (use-package org-roam-bibtex
-  :ensure t
+  :straight t
   :after org-roam
   :hook (org-mode . org-roam-bibtex-mode)
   :bind (("M-m n p" . orb-note-actions))
@@ -251,8 +251,9 @@ selected even if `org-zotxt-default-search-method' is non-nil"
       (if zotxt--debug-sync (deferred:sync! it)))))
 
 (use-package company-org-roam
-  :quelpa
-  (company-org-roam :fetcher github :repo "jethrokuan/company-org-roam")
+  ;; :quelpa
+  ;; (company-org-roam :fetcher github :repo "jethrokuan/company-org-roam")
+  :straight (el-patch :type git :host github :repo "jethrokuan/company-org-roam")
   :config
   (push 'company-org-roam company-backends))
 

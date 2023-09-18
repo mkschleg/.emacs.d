@@ -3,6 +3,8 @@
 
 (use-package org
   ;; :ensure org-contrib
+  ;; :straight nil
+   :straight (:type built-in)
   :functions
   org-renumber-environment
   mattroot/org-skip-subtree-if-habit
@@ -106,6 +108,7 @@
   :config
 
   (require 'org-src)
+  (require 'org-inlinetask)
 
   (add-to-list 'org-src-block-faces '("latex" (:inherit default :extend t)))
   ;; (add-hook 'org-mode-hook (lambda ()
@@ -171,12 +174,25 @@
 
   );; use-package org31
 
-(root-leader
-  "d" '(:ignore t :which-key "[d]aily Journal"))
 
+(use-package org-download
+  :straight t
+  :defer t
+  :custom
+  (org-download-image-org-width 600)
+  :init
+  ;; Add handlers for drag-and-drop when Org is loaded.
+  (with-eval-after-load 'org
+    (org-download-enable))
+  )
+
+(eval-after-load 'general
+  (root-leader
+    "d" '(:ignore t :which-key "[d]aily Journal"))
+  )
 
 (use-package org-journal
-  :ensure t
+  :straight t
   :bind (("M-m d n" . 'org-journal-new-entry))
   :custom
   (org-journal-dir "~/org/journal")
@@ -199,18 +215,19 @@
 ;;;;
 
 (use-package org-bullets
-  :ensure t
+  :straight t
   :hook (org-mode . (lambda () (org-bullets-mode 1))))
 
 
-(use-package org-inlinetask)
+;; (use-package org-inlinetask
+;;   :straight t)
 
 ;;;;
 ;; zotxt
 ;;;;
 
 (use-package zotxt
-  :ensure t
+  :straight t
   :hook (org-mode . (lambda () (org-zotxt-mode 1)))
   :bind (("C-c \" o" . mattroot/org-zotxt-get-org-file-at-point))
   :functions
@@ -247,7 +264,7 @@
 
 
 (use-package org-ref
-  :ensure t
+  :straight t
   :custom
   (bibtex-completion-display-formats
 	'((article       . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${journal:40}")

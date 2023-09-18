@@ -20,14 +20,51 @@
      ("#F309DF" . 85)
      ("#3C3D37" . 100)))
  '(magit-diff-use-overlays nil)
- '(org-agenda-files
-   '("/Users/Matt/org/archive.org" "/Users/Matt/org/job_hunt.org" "/Users/Matt/org/questions.org" "/Users/Matt/org/refile.org" "/Users/Matt/org/study.org" "/Users/Matt/org/teaching.org" "/Users/Matt/org/todo.org" "/Users/Matt/org/toread.org" "/Users/Matt/org/plan/blog.org" "/Users/Matt/org/plan/ideas.org" "/Users/Matt/org/plan/organizing.org" "/Users/Matt/org/plan/pact.org" "/Users/Matt/org/plan/plan.org" "/Users/Matt/org/plan/projects.org" "/Users/Matt/org/projects/analyzing_rnns_in_rl.org" "/Users/Matt/org/projects/comp_gvfs.org" "/Users/Matt/org/projects/curiosity.org" "/Users/Matt/org/projects/interview_study.org" "/Users/Matt/org/projects/juliarl.org" "/Users/Matt/org/projects/pred_reps.org" "/Users/Matt/org/projects/predictive_coding.org" "/Users/Matt/org/projects/reproduce.org" "/Users/Matt/org/projects/sarah_forever.org" "/Users/Matt/org/projects/website.org" "/Users/Matt/Documents/Research/thesis/thesis/thesis.org") nil nil "Customized with use-package org")
  '(package-selected-packages
    '(org org-roam zotxt yasnippet-snippets yaml-mode writeroom-mode which-key unfill undo-tree spaceline request-deferred refine rainbow-delimiters quelpa-use-package poly-markdown pipenv persp-mode pdf-tools ox-hugo org-roam-bibtex org-ref org-journal org-inline-pdf org-fragtog org-bullets neotree multiple-cursors monokai-theme magit lsp-ui lsp-julia latex-extra jupyter ivy-bibtex hl-todo helm-lsp god-mode general fullframe eyebrowse elpy eglot-jl dimmer diminish counsel-projectile company-quickhelp company-org-roam company-auctex company-anaconda biblio auto-compile auctex-latexmk))
  '(pos-tip-background-color "#FFFACE")
  '(pos-tip-foreground-color "#272822")
  '(safe-local-variable-values
-   '((bibtex-completion-bibliography "./thesis.bib" "./me.bib")
+   '((eval setq org-download-image-dir
+           (concat "./images/"
+                   (file-name-base
+                    (buffer-file-name))))
+     (eval setq org-download-image-dir
+           (concat "./images"
+                   (file-name-base
+                    (buffer-file-name))))
+     (org-download-image-dir eval concat "./images"
+                             (file-name-base
+                              (buffer-file-name)))
+     (org-download-image-dir concat "./images"
+                             (file-name-base
+                              (buffer-file-name)))
+     (org-download-image-dir . "./images")
+     (elisp-lint-indent-specs
+      (describe . 1)
+      (it . 1)
+      (thread-first . 0)
+      (cl-flet . 1)
+      (cl-flet* . 1)
+      (org-element-map . defun)
+      (org-roam-dolist-with-progress . 2)
+      (org-roam-with-temp-buffer . 1)
+      (org-with-point-at . 1)
+      (magit-insert-section . defun)
+      (magit-section-case . 0)
+      (org-roam-with-file . 2))
+     (elisp-lint-ignored-validators "byte-compile" "package-lint")
+     (eglot-jl-julia-command . "julia-1.9")
+     (eglot-jl-julia-command . "julia-1.8")
+     (eglot-jl-julia-command . "julia-1.7")
+     (eglot-jl-julia-command . "julia-1.6")
+     (eglot-jl-julia-command . "julia-1.5")
+     (eglot-jl-julia-command . "julia-1.4")
+     (TeX-master . t)
+     (TeX-master . "main.org")
+     (org-hugo-section . "braindump")
+     (org-hugo-base-dir . "~/Documents/Professional/website/")
+     (bibtex-completion-bibliography "./thesis.bib" "./me.bib")
      (bibtex-completion-bibliography quote
                                      ("./thesis.bib" "./me.bib"))
      (org-babel-default-header-args:julia
@@ -71,7 +108,7 @@
      (org-notes-parent-file . "../math.org")
      (org-notes-parent-file . "../linear_algebra.org")
      (org-notes-root-file . "../math.org")
-     (org-notes-root-file . \.\./math\.org)
+     (org-notes-root-file . \../math.org)
      (eval setq flycheck-clang-include-path
            (list "/Users/Matt/Documents/Research/projects/GVF/inc" "/Users/Matt/Documents/Research/projects/GVF/lib" "/opt/local/include/libomp"))
      (company-clang-arguments "-I/Users/Matt/Documents/Research/projects/GVF/inc" "-I/Users/Matt/Documents/Research/projects/GVF/lib" "-I/opt/local/include/libomp" "-std=c++14")))
@@ -103,4 +140,4 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-roam-link ((t (:inherit org-link :foreground "#9c8321")))))
+ '(org-roam-link ((t (:inherit org-link :foreground "#9c8321"))) t))
