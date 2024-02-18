@@ -195,6 +195,15 @@ Return the list of results."
                    ;; Recurse for rest of elements.
                    (mapcar #'cdr args)))))
 #+end_src
+* Tramp
+#+begin_src emacs-lisp
+;; (setq remote-file-name-inhibit-cache nil)
+;; (setq vc-ignore-dir-regexp
+;;       (format "%s\\|%s"
+;;                     vc-ignore-dir-regexp
+;;                     tramp-file-name-regexp))
+;; (setq tramp-verbose 1)
+#+end_src
 * Keybind setup
 ** [[https://github.com/emacsorphanage/god-mode][god-mode]]
 
@@ -346,7 +355,6 @@ Change empty line to tilde (from spacemacs).
   (setcdr (assq 'empty-line fringe-indicator-alist) 'tilde))
 #+end_src
 
-
 * Hydras
 ** setup
 #+begin_src emacs-lisp
@@ -393,7 +401,6 @@ Change empty line to tilde (from spacemacs).
 #+end_src
 
 ** Persp-mode
-
 
 * Persp and Eybrowse
 
@@ -868,7 +875,6 @@ FRAME defaults to the current frame."
 ;;;;;;;;
 (require 'init-org-notes)
 #+end_src
-
 
 * SQL Databases:
 
