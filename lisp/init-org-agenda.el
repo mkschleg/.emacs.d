@@ -24,15 +24,6 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
                 ((org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo 'done)
 						(org-agenda-skip-entry-if 'scheduled 'deadline)))
                  (org-agenda-overriding-header "High-priority unfinished tasks:")))
-	  ;; (tags "REXP"
-	  ;;       ((org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo 'done)
-	  ;;       				(org-agenda-skip-if nil '(scheduled))))
-          ;;        (org-agenda-overriding-header "Running Experiments:")))
-	  ;; (tags "EXP"
-          ;;       ((org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo 'done)
-	  ;;       				(org-agenda-skip-if nil '(scheduled))))
-          ;;        (org-agenda-overriding-header "Experiments:")))
-          (agenda "" )
           (tags "TODO=\"waiting\""
                 ((org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo 'done)
 						(org-agenda-skip-if nil '(scheduled))))
@@ -45,29 +36,26 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
                 ((org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo 'done)
 						(org-agenda-skip-if nil '(scheduled))))
                  (org-agenda-overriding-header "Low-priority unfinished tasks:")))
-          ;; (alltodo ""
-          ;;          ((org-agenda-skip-function '(or (mattroot/org-skip-subtree-if-habit)
-          ;;                                          (mattroot/org-skip-subtree-if-priority ?A)
-	  ;;       				   (mattroot/org-skip-subtree-if-priority ?B)
-          ;;                                          (org-agenda-skip-if nil '(scheduled deadline))))
-          ;;           (org-agenda-overriding-header "ALL normal priority tasks:")))
           )
          ((org-agenda-compact-blocks t)))))
 
 
 (setq org-todo-keywords
       '((sequence "TODO(t)" "NEXT(n)" "IN-PROGRESS(p)" "|" "DONE(d)")
-        (sequence "WAITING(w)" "RUNNING(r)" "DOWNLOAD(o)" "|" "CANCELLED(c)")))
+        (sequence "TODO-PROJ" "|" "DONE-PROJ")
+        (sequence "TODO-EXP(e)" "RUNNING(r)" "TO-ANALYZE(o)" "|" "ANALYZED(a)")))
 
 ;; Set colors for todo states
 (setq org-todo-keyword-faces
       '(("TODO" . (:foreground "red" :weight bold))
+        ("TODO-PROJ" . (:foreground "red" :weight bold))
+        ("TODO-EXP" . (:foreground "red" :weight bold))
         ("NEXT" . (:foreground "yellow" :weight bold))
         ("DONE" . org-done)
         ("IN-PROGRESS" . (:foreground "yellow" :weight bold))
         ("WAITING" . (:foreground "yellow" :weight bold))
         ("RUNNING" . (:foreground "lightblue" :weight bold))
-	("DOWNLOAD" . (:foreground "orange" :weight bold))))
+	("TO-ANALYZE" . (:foreground "orange" :weight bold))))
 
 ;; Automatic todo updating for trees
 (defun org-summary-todo (n-done n-not-done)

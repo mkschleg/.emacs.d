@@ -51,6 +51,8 @@
   (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia-1.7"))
   (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia-1.8"))
   (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia-1.9"))
+  (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia-1.10"))
+  (add-to-list 'safe-local-variable-values '(eglot-jl-julia-command . "julia-1.11"))
   )
 
 ;; (use-package lsp-julia

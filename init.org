@@ -843,9 +843,6 @@ FRAME defaults to the current frame."
 (use-package visual-fill-column
   :straight t)
 
-(use-package poly-markdown
-  :straight t)
-
 (use-package highlight-numbers
   :straight t)
 #+end_src
@@ -933,6 +930,44 @@ FRAME defaults to the current frame."
 
 (use-package python-pytest
   :straight t)
+#+end_src
+** Markdown
+#+begin_src emacs-lisp
+(use-package markdown-mode
+  :ensure t
+  :mode ("README\\.md\\'" . gfm-mode)
+  :init (setq markdown-command "multimarkdown")
+  :bind (:map markdown-mode-map
+         ("C-c C-e" . markdown-do)))
+
+(use-package poly-markdown
+  :straight t)
+#+end_src
+** CSharp
+
+#+begin_src emacs-lisp
+
+
+#+end_src
+
+* Large Language Models
+#+begin_src emacs-lisp
+
+(root-leader
+  "p" '(:ignore t :which-key "ellama")
+  "p a" '(:ignore t :which-key "ask")
+  "p c" '(:ignore t :which-key "code"))
+
+(use-package ellama
+  :straight t
+  :init
+  (setopt ellama-keymap-prefix "M-m p")
+  (require 'llm-ollama)
+  (setopt ellama-provider
+          (make-llm-ollama
+           :chat-model "llama3:latest"
+           :embedding-model "llama3:latest"))
+  )
 #+end_src
 
 ** CSharp

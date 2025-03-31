@@ -20,13 +20,19 @@
      ("#F309DF" . 85)
      ("#3C3D37" . 100)))
  '(magit-diff-use-overlays nil)
+ '(org-agenda-files
+   '("/Users/matt/org/todo.org" "/Users/matt/org/archive.org" "/Users/matt/org/ideageneration.org" "/Users/matt/org/job_hunt.org" "/Users/matt/org/questions.org" "/Users/matt/org/refile.org" "/Users/matt/org/study.org" "/Users/matt/org/teaching.org" "/Users/matt/org/toread.org" "/Users/matt/org/plan/blog.org" "/Users/matt/org/plan/ideas.org" "/Users/matt/org/plan/organizing.org" "/Users/matt/org/plan/pact.org" "/Users/matt/org/plan/plan.org" "/Users/matt/org/plan/projects.org" "/Users/matt/org/projects/analyzing_rnns_in_rl.org" "/Users/matt/org/projects/comp_gvfs.org" "/Users/matt/org/projects/curiosity.org" "/Users/matt/org/projects/flux.org" "/Users/matt/org/projects/interview_study.org" "/Users/matt/org/projects/juliarl.org" "/Users/matt/org/projects/pred_reps.org" "/Users/matt/org/projects/predictive_coding.org" "/Users/matt/org/projects/reproduce.org" "/Users/matt/org/projects/sarah_forever.org" "/Users/matt/org/projects/website.org" "/Users/matt/org/notes/current_learning_objectives.org") nil nil "Customized with use-package org")
  '(package-selected-packages
    '(org org-roam zotxt yasnippet-snippets yaml-mode writeroom-mode which-key unfill undo-tree spaceline request-deferred refine rainbow-delimiters quelpa-use-package poly-markdown pipenv persp-mode pdf-tools ox-hugo org-roam-bibtex org-ref org-journal org-inline-pdf org-fragtog org-bullets neotree multiple-cursors monokai-theme magit lsp-ui lsp-julia latex-extra jupyter ivy-bibtex hl-todo helm-lsp god-mode general fullframe eyebrowse elpy eglot-jl dimmer diminish counsel-projectile company-quickhelp company-org-roam company-auctex company-anaconda biblio auto-compile auctex-latexmk))
  '(pos-tip-background-color "#FFFACE")
  '(pos-tip-foreground-color "#272822")
  '(safe-local-variable-values
+<<<<<<< HEAD
    '((org-confirm-babel-evaluate)
      (org-babel-default-header-args:julia
+=======
+   '((org-babel-default-header-args:julia
+>>>>>>> 218c9c3 (Update org mode stuff)
       (:session . "jl")
       (:kernel . "julia-orgroam")
       (:exports . "both"))
