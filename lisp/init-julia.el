@@ -3,8 +3,6 @@
 (root-leader
   "j" '(:ignore t :which-key "jupyter"))
 
-(setq julia-default-exequtable "julia_1_6")
-
 (use-package julia-mode
   :straight t
   :config

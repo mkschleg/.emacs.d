@@ -45,12 +45,12 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
                 ((org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo 'done)
 						(org-agenda-skip-if nil '(scheduled))))
                  (org-agenda-overriding-header "Low-priority unfinished tasks:")))
-          (alltodo ""
-                   ((org-agenda-skip-function '(or (mattroot/org-skip-subtree-if-habit)
-                                                   (mattroot/org-skip-subtree-if-priority ?A)
-	        				   (mattroot/org-skip-subtree-if-priority ?B)
-                                                   (org-agenda-skip-if nil '(scheduled deadline))))
-                    (org-agenda-overriding-header "ALL normal priority tasks:")))
+          ;; (alltodo ""
+          ;;          ((org-agenda-skip-function '(or (mattroot/org-skip-subtree-if-habit)
+          ;;                                          (mattroot/org-skip-subtree-if-priority ?A)
+	  ;;       				   (mattroot/org-skip-subtree-if-priority ?B)
+          ;;                                          (org-agenda-skip-if nil '(scheduled deadline))))
+          ;;           (org-agenda-overriding-header "ALL normal priority tasks:")))
           )
          ((org-agenda-compact-blocks t)))))
 

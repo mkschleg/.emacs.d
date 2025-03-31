@@ -88,7 +88,7 @@
   (org-latex-prefer-user-labels t)
   (org-latex-logfiles-extensions (quote ("lof" "lot" "tex~" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl")))
   (mattroot/org-pub-dir "/Users/Matt/org/org-export-files")
-  (org-latex-packages-alist '(("" "natbib" nil)))
+  ;; (org-latex-packages-alist '(("" "natbib" nil)))
 
   
   (org-default-priority ?D)

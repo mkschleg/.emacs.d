@@ -25,7 +25,16 @@
  '(pos-tip-background-color "#FFFACE")
  '(pos-tip-foreground-color "#272822")
  '(safe-local-variable-values
-   '((eval setq org-download-image-dir
+   '((org-confirm-babel-evaluate)
+     (org-babel-default-header-args:julia
+      (:session . "jl")
+      (:kernel . "julia-orgroam")
+      (:exports . "both"))
+     (org-babel-default-header-args:jupyter-julia
+      (:session . "jl")
+      (:kernel . "julia-orgroam")
+      (:exports . "both"))
+     (eval setq org-download-image-dir
            (concat "./images/"
                    (file-name-base
                     (buffer-file-name))))
@@ -67,32 +76,6 @@
      (bibtex-completion-bibliography "./thesis.bib" "./me.bib")
      (bibtex-completion-bibliography quote
                                      ("./thesis.bib" "./me.bib"))
-     (org-babel-default-header-args:julia
-      (:session . "jl")
-      (:kernel . "juliaorgroam-1.8")
-      (:exports . "both"))
-     (org-babel-default-header-args:jupyter-julia
-      (:session . "jl")
-      (:kernel . "juliaorgroam-1.8")
-      (:exports . "both"))
-     (org-babel-default-header-args:jupyter-julia quote
-                                                  ((:session . "jl")
-                                                   (:kernel . "juliaorgroam-1.8")
-                                                   (:exports . "both")))
-     (org-babel-default-header-args:jupyter-julia
-      '((:session . "jl")
-        (:kernel . "juliaorgroam-1.8")
-        (:exports . "both")))
-     (org-confirm-babel-evaluate)
-     (org-babel-default-header-args:julia quote
-                                          ((:session . "jl")
-                                           (:kernel . "juliaorgroam-1.8")
-                                           (:exports . "both")))
-     (org-confirm-babel-evaluate nil)
-     (org-babel-default-header-args:julia
-      '((:session . "jl")
-        (:kernel . "juliaorgroam-1.8")
-        (:exports . "both")))
      (org-preview-latex-image-directory . "../notes-ltximg/")
      (bibtex-completion-bibliography . "./thesis.bib")
      (bibtex-completion-bibliography "./thesis.bib")

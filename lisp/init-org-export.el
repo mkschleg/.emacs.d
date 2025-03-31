@@ -46,9 +46,14 @@
                '("note"
                  "
 \\documentclass[11pt]{article}          % for default format
-\\include{~/org/org-support-files/variables.tex}
+\\usepackage[
+backend=biber,
+style=numeric,
+sorting=ynt,
+natbib=true
+]{biblatex}
+\\addbibresource{../bib/full_library.bib}
 "
-                 ("\\chapter{%s}" . "\\chapter*{%s}")
                  ("\\section{%s}" . "\\section*{%s}")
                  ("\\subsection{%s}" . "\\subsection*{%s}")
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
