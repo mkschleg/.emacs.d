@@ -43,15 +43,19 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 (setq org-todo-keywords
       '((sequence "TODO(t)" "NEXT(n)" "IN-PROGRESS(p)" "|" "DONE(d)")
         (sequence "TODO-PROJ" "|" "DONE-PROJ")
+        (sequence "TODO-LO" "|" "LEARNED")
         (sequence "TODO-EXP(e)" "RUNNING(r)" "TO-ANALYZE(o)" "|" "ANALYZED(a)")))
 
 ;; Set colors for todo states
 (setq org-todo-keyword-faces
       '(("TODO" . (:foreground "red" :weight bold))
         ("TODO-PROJ" . (:foreground "red" :weight bold))
+        ("TODO-LO" . (:foreground "red" :weight bold))
         ("TODO-EXP" . (:foreground "red" :weight bold))
         ("NEXT" . (:foreground "yellow" :weight bold))
         ("DONE" . org-done)
+        ("DONE-PROJ" . org-done)
+        ("LEARNED" . org-done)
         ("IN-PROGRESS" . (:foreground "yellow" :weight bold))
         ("WAITING" . (:foreground "yellow" :weight bold))
         ("RUNNING" . (:foreground "lightblue" :weight bold))

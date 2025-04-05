@@ -729,6 +729,8 @@ FRAME defaults to the current frame."
 
 (diminish 'auto-rev-mode)
 
+(global-auto-revert-mode 1)
+
 (setq indent-tabs-mode nil)
 
 (use-package unfill
