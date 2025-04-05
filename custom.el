@@ -27,12 +27,8 @@
  '(pos-tip-background-color "#FFFACE")
  '(pos-tip-foreground-color "#272822")
  '(safe-local-variable-values
-<<<<<<< HEAD
    '((org-confirm-babel-evaluate)
      (org-babel-default-header-args:julia
-=======
-   '((org-babel-default-header-args:julia
->>>>>>> 218c9c3 (Update org mode stuff)
       (:session . "jl")
       (:kernel . "julia-orgroam")
       (:exports . "both"))
