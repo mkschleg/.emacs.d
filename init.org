@@ -955,21 +955,21 @@ FRAME defaults to the current frame."
 * Large Language Models
 #+begin_src emacs-lisp
 
-(root-leader
-  "p" '(:ignore t :which-key "ellama")
-  "p a" '(:ignore t :which-key "ask")
-  "p c" '(:ignore t :which-key "code"))
+  (root-leader
+    "p" '(:ignore t :which-key "ellama")
+    "p a" '(:ignore t :which-key "ask")
+    "p c" '(:ignore t :which-key "code"))
 
-(use-package ellama
-  :straight t
-  :init
-  (setopt ellama-keymap-prefix "M-m p")
-  (require 'llm-ollama)
-  (setopt ellama-provider
-          (make-llm-ollama
-           :chat-model "llama3:latest"
-           :embedding-model "llama3:latest"))
-  )
+  ;; (use-package ellama
+  ;;   :straight t
+  ;;   :init
+  ;;   (setopt ellama-keymap-prefix "M-m p")
+  ;;   (require 'llm-ollama)
+  ;;   (setopt ellama-provider
+  ;;           (make-llm-ollama
+  ;;            :chat-model "llama3:latest"
+  ;;            :embedding-model "llama3:latest"))
+  ;;   )
 #+end_src
 
 ** CSharp
